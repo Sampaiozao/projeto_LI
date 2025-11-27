@@ -1,0 +1,1764 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Casa - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-4">
+        <div class="container-fluid px-4">
+            <span class="navbar-brand mb-0 h1">🏠 Gestão de Casa</span>
+            <div class="d-flex align-items-center">
+                <span id="userName" class="me-3 text-muted"></span>
+                <button class="btn btn-outline-danger btn-sm" onclick="logout()">
+                    <i class="bi bi-box-arrow-right"></i> Sair
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container-fluid px-4 pb-4">
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-pills mb-4" id="mainTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="dashboard-tab" data-bs-toggle="pill" data-bs-target="#dashboardSection" type="button">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="gestao-tab" data-bs-toggle="pill" data-bs-target="#gestaoSection" type="button">
+                    <i class="bi bi-folder"></i> Gestão
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tarefas-tab" data-bs-toggle="pill" data-bs-target="#tarefasSection" type="button" onclick="renderTarefas()">
+                    <i class="bi bi-list-check"></i> Tarefas
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="calendario-tab" data-bs-toggle="pill" data-bs-target="#calendarioSection" type="button">
+                    <i class="bi bi-calendar3"></i> Calendário
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pessoas-tab" data-bs-toggle="pill" data-bs-target="#pessoasSection" type="button" onclick="renderPessoas()">
+                    <i class="bi bi-people"></i> Pessoas
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <!-- Dashboard Section -->
+            <div class="tab-pane fade show active" id="dashboardSection" role="tabpanel">
+                <h2 class="mb-4">Visão Geral</h2>
+                
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card text-white bg-primary">
+                            <div class="card-body d-flex align-items-center">
+                                <i class="bi bi-wallet2 fs-1 me-3"></i>
+                                <div>
+                                    <h3 class="card-title mb-0" id="totalContas">0</h3>
+                                    <p class="card-text small mb-0">Contas Pendentes</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card text-white bg-info">
+                            <div class="card-body d-flex align-items-center">
+                                <i class="bi bi-list-check fs-1 me-3"></i>
+                                <div>
+                                    <h3 class="card-title mb-0" id="totalTarefas">0</h3>
+                                    <p class="card-text small mb-0">Tarefas Pendentes</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card text-white bg-danger">
+                            <div class="card-body d-flex align-items-center">
+                                <i class="bi bi-exclamation-triangle fs-1 me-3"></i>
+                                <div>
+                                    <h3 class="card-title mb-0" id="tarefasAtrasadas">0</h3>
+                                    <p class="card-text small mb-0">Tarefas Atrasadas</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card text-white bg-success">
+                            <div class="card-body d-flex align-items-center">
+                                <i class="bi bi-currency-euro fs-1 me-3"></i>
+                                <div>
+                                    <h3 class="card-title mb-0" id="totalValor">0€</h3>
+                                    <p class="card-text small mb-0">Total a Pagar</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0"><i class="bi bi-calendar-event"></i> Próximas Contas</h5>
+                            </div>
+                            <ul id="proximasContas" class="list-group list-group-flush"></ul>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0"><i class="bi bi-list-check"></i> Tarefas Pendentes</h5>
+                            </div>
+                            <ul id="tarefasPendentes" class="list-group list-group-flush"></ul>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0"><i class="bi bi-shield-check"></i> Garantias a Expirar</h5>
+                            </div>
+                            <ul id="garantiasExpirar" class="list-group list-group-flush"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gestão Section -->
+            <div class="tab-pane fade" id="gestaoSection" role="tabpanel">
+                <h2 class="mb-4"><i class="bi bi-folder"></i> Gestão Financeira</h2>
+                
+                <!-- Sub-navigation for Gestão -->
+                <ul class="nav nav-tabs mb-4" id="gestaoTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="sub-contas-tab" data-bs-toggle="tab" data-bs-target="#contasSection" type="button" onclick="renderContas()">
+                            <i class="bi bi-wallet2"></i> Contas
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="sub-faturas-tab" data-bs-toggle="tab" data-bs-target="#faturasSection" type="button" onclick="renderFaturas()">
+                            <i class="bi bi-receipt"></i> Faturas
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="sub-garantias-tab" data-bs-toggle="tab" data-bs-target="#garantiasSection" type="button" onclick="renderGarantias()">
+                            <i class="bi bi-shield-check"></i> Garantias
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <!-- Contas Sub-section -->
+                    <div class="tab-pane fade show active" id="contasSection" role="tabpanel">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2><i class="bi bi-wallet2"></i> Gestão de Contas</h2>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#contaModal">
+                        <i class="bi bi-plus-circle"></i> Nova Conta
+                    </button>
+                </div>
+                
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6 col-lg-3">
+                        <select id="filtroStatusConta" class="form-select" onchange="renderContas()">
+                            <option value="todas">Todas</option>
+                            <option value="pendente">Pendentes</option>
+                            <option value="paga">Pagas</option>
+                            <option value="atrasada">Atrasadas</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <select id="filtroPessoaConta" class="form-select" onchange="renderContas()">
+                            <option value="todas">Todas as Pessoas</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Descrição</th>
+                                    <th>Valor</th>
+                                    <th>Vencimento</th>
+                                    <th>Responsável</th>
+                                    <th>Estado</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="contasTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Faturas Section -->
+            <div class="tab-pane fade" id="faturasSection" role="tabpanel">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2><i class="bi bi-receipt"></i> Gestão de Faturas</h2>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#faturaModal">
+                        <i class="bi bi-plus-circle"></i> Nova Fatura
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Descrição</th>
+                                    <th>Valor</th>
+                                    <th>Data Compra</th>
+                                    <th>Local</th>
+                                    <th>Categoria</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="faturasTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Garantias Section -->
+            <div class="tab-pane fade" id="garantiasSection" role="tabpanel">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2><i class="bi bi-shield-check"></i> Gestão de Garantias</h2>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#garantiaModal">
+                        <i class="bi bi-plus-circle"></i> Nova Garantia
+                    </button>
+                </div>
+
+                <div class="mb-3">
+                    <select id="filtroStatusGarantia" class="form-select" style="max-width: 300px;" onchange="renderGarantias()">
+                        <option value="todas">Todas</option>
+                        <option value="ativa">Ativas</option>
+                        <option value="expirada">Expiradas</option>
+                        <option value="expirando">A Expirar (30 dias)</option>
+                    </select>
+                </div>
+
+                <div class="row g-3" id="garantiasGrid"></div>
+            </div>
+
+                </div>
+            </div>
+
+            <!-- Tarefas Section -->
+            <div class="tab-pane fade" id="tarefasSection" role="tabpanel">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2><i class="bi bi-list-check"></i> Gestão de Tarefas</h2>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tarefaModal">
+                        <i class="bi bi-plus-circle"></i> Nova Tarefa
+                    </button>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <select class="form-select" id="filtroStatusTarefa">
+                            <option value="todas">Todos os Status</option>
+                            <option value="pendente">Pendente</option>
+                            <option value="em_progresso">Em Progresso</option>
+                            <option value="concluida">Concluída</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" id="filtroResponsavelTarefa">
+                            <option value="todas">Todas as Pessoas</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" id="filtroCriadorTarefa">
+                            <option value="todas">Todos os Criadores</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" id="filtroPrioridadeTarefa">
+                            <option value="todas">Todas as Prioridades</option>
+                            <option value="baixa">Baixa</option>
+                            <option value="media">Média</option>
+                            <option value="alta">Alta</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Tarefa</th>
+                                        <th>Responsável</th>
+                                        <th>Criado por</th>
+                                        <th>Prazo</th>
+                                        <th>Prioridade</th>
+                                        <th>Status</th>
+                                        <th>Relação</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tarefasTableBody">
+                                    <tr><td colspan="8" class="text-center text-muted py-4">Nenhuma tarefa registada</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendário Section -->
+            <div class="tab-pane fade" id="calendarioSection" role="tabpanel">
+                <h2 class="mb-4"><i class="bi bi-calendar3"></i> Calendário</h2>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <button class="btn btn-outline-primary btn-sm" onclick="previousMonth()">
+                                <i class="bi bi-chevron-left"></i>
+                            </button>
+                            <h4 class="mb-0 flex-grow-1 text-center" id="currentMonthYear"></h4>
+                            <button class="btn btn-outline-primary btn-sm" onclick="nextMonth()">
+                                <i class="bi bi-chevron-right"></i>
+                            </button>
+                            <button class="btn btn-primary btn-sm" onclick="goToToday()">Hoje</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex gap-2 flex-wrap justify-content-end">
+                            <span class="badge bg-primary"><i class="bi bi-list-check"></i> Tarefas</span>
+                            <span class="badge bg-info"><i class="bi bi-wallet2"></i> Contas</span>
+                            <span class="badge bg-warning"><i class="bi bi-shield-check"></i> Garantias</span>
+                            <span class="badge bg-success"><i class="bi bi-receipt"></i> Faturas</span>
+                            <span class="badge bg-danger"><i class="bi bi-star-fill"></i> Feriados</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-bordered mb-0" id="calendarTable">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="text-center">Dom</th>
+                                        <th class="text-center">Seg</th>
+                                        <th class="text-center">Ter</th>
+                                        <th class="text-center">Qua</th>
+                                        <th class="text-center">Qui</th>
+                                        <th class="text-center">Sex</th>
+                                        <th class="text-center">Sáb</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="calendarBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0"><i class="bi bi-calendar-event"></i> Eventos do Dia Selecionado</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="selectedDayEvents">
+                                    <p class="text-muted text-center">Selecione um dia no calendário para ver os eventos</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pessoas Section -->
+            <div class="tab-pane fade" id="pessoasSection" role="tabpanel">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2><i class="bi bi-people"></i> Gestão de Pessoas</h2>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pessoaModal">
+                        <i class="bi bi-plus-circle"></i> Nova Pessoa
+                    </button>
+                </div>
+
+                <div class="row g-3" id="pessoasGrid"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal: Nova Conta -->
+    <div class="modal fade" id="contaModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="contaModalTitle">Nova Conta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="contaForm">
+                <input type="hidden" id="contaId">
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <input type="text" id="contaDescricao" required placeholder="Ex: Eletricidade, Água, Internet... ">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Valor (€)</label>
+                        <input type="number" id="contaValor" step="0.01" required placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label>Data de Vencimento</label>
+                        <input type="date" id="contaVencimento" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Responsável</label>
+                    <select id="contaResponsavel" required>
+                        <option value="">Selecione... </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Categoria</label>
+                    <select id="contaCategoria">
+                        <option value="utilidades">Utilidades (Água, Luz, Gás)</option>
+                        <option value="internet">Internet/TV</option>
+                        <option value="renda">Renda/Hipoteca</option>
+                        <option value="seguros">Seguros</option>
+                        <option value="outros">Outros</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Recorrente? </label>
+                    <select id="contaRecorrente">
+                        <option value="nao">Não</option>
+                        <option value="mensal">Mensal</option>
+                        <option value="trimestral">Trimestral</option>
+                        <option value="anual">Anual</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Notas</label>
+                    <textarea id="contaNotas" placeholder="Observações adicionais... "></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('contaModal')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Nova Fatura -->
+    <div class="modal fade" id="faturaModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="faturaModalTitle">Nova Fatura</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="faturaForm">
+                <input type="hidden" id="faturaId">
+                <div class="form-group">
+                    <label>Descrição do Produto/Serviço</label>
+                    <input type="text" id="faturaDescricao" required placeholder="Ex: Televisão Samsung 55''">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Valor (€)</label>
+                        <input type="number" id="faturaValor" step="0. 01" required placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label>Data da Compra</label>
+                        <input type="date" id="faturaData" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Local de Compra</label>
+                    <input type="text" id="faturaLocal" placeholder="Ex: Worten, Amazon, IKEA...">
+                </div>
+                <div class="form-group">
+                    <label>Categoria</label>
+                    <select id="faturaCategoria" onchange="toggleGarantia()">
+                        <option value="eletronicos">Eletrónicos</option>
+                        <option value="eletrodomesticos">Eletrodomésticos</option>
+                        <option value="mobiliario">Mobiliário</option>
+                        <option value="roupa">Roupa</option>
+                        <option value="alimentacao">Alimentação</option>
+                        <option value="outros">Outros</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Número da Fatura (opcional)</label>
+                    <input type="text" id="faturaNumero" placeholder="Ex: FT 2024/12345">
+                </div>
+                <div class="form-group" id="garantiaSection">
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="faturaComGarantia" checked>
+                        <label class="form-check-label" for="faturaComGarantia">
+                            <strong>Criar garantia automática</strong>
+                        </label>
+                    </div>
+                    <div id="garantiaDuracaoSection">
+                        <label>Duração da Garantia</label>
+                        <select id="faturaGarantiaDuracao" class="form-select">
+                            <option value="6">6 Meses</option>
+                            <option value="12">1 Ano</option>
+                            <option value="24" selected>2 Anos (Padrão Legal)</option>
+                            <option value="36">3 Anos</option>
+                            <option value="60">5 Anos</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Número de Série (opcional)</label>
+                    <input type="text" id="faturaSerial" placeholder="S/N do produto">
+                </div>
+                <div class="form-group">
+                    <label>Notas</label>
+                    <textarea id="faturaNotas" placeholder="Observações adicionais..."></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('faturaModal')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Nova Garantia -->
+    <div id="garantiaModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="garantiaModalTitle">Nova Garantia</h3>
+                <button class="close-btn" onclick="closeModal('garantiaModal')">&times;</button>
+            </div>
+            <form id="garantiaForm">
+                <input type="hidden" id="garantiaId">
+                <div class="form-group">
+                    <label>Produto</label>
+                    <input type="text" id="garantiaProduto" required placeholder="Ex: Máquina de Lavar Roupa">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Data da Compra</label>
+                        <input type="date" id="garantiaDataCompra" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Duração da Garantia</label>
+                        <select id="garantiaDuracao" required>
+                            <option value="6">6 Meses</option>
+                            <option value="12">1 Ano</option>
+                            <option value="24" selected>2 Anos</option>
+                            <option value="36">3 Anos</option>
+                            <option value="60">5 Anos</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Local de Compra</label>
+                    <input type="text" id="garantiaLocal" placeholder="Ex: MediaMarkt, Worten... ">
+                </div>
+                <div class="form-group">
+                    <label>Valor do Produto (€)</label>
+                    <input type="number" id="garantiaValor" step="0.01" placeholder="0.00">
+                </div>
+                <div class="form-group">
+                    <label>Número de Série (opcional)</label>
+                    <input type="text" id="garantiaSerial" placeholder="S/N do produto">
+                </div>
+                <div class="form-group">
+                    <label>Notas</label>
+                    <textarea id="garantiaNotas" placeholder="Observações, contactos de suporte..."></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('garantiaModal')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Nova Tarefa -->
+    <div class="modal fade" id="tarefaModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tarefaModalTitle">Nova Tarefa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="tarefaForm">
+                        <input type="hidden" id="tarefaId">
+                        
+                        <div class="mb-3">
+                            <label for="tarefaTitulo" class="form-label">Título da Tarefa *</label>
+                            <input type="text" class="form-control" id="tarefaTitulo" required placeholder="Ex: Pagar conta de água">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="tarefaDescricao" class="form-label">Descrição</label>
+                            <textarea class="form-control" id="tarefaDescricao" rows="3" placeholder="Detalhes sobre a tarefa..."></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="tarefaResponsavel" class="form-label">Atribuir a *</label>
+                                <select class="form-select" id="tarefaResponsavel" required>
+                                    <option value="">Selecione uma pessoa...</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="tarefaPrazo" class="form-label">Prazo *</label>
+                                <input type="date" class="form-control" id="tarefaPrazo" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="tarefaPrioridade" class="form-label">Prioridade *</label>
+                                <select class="form-select" id="tarefaPrioridade" required>
+                                    <option value="baixa">🟢 Baixa</option>
+                                    <option value="media" selected>🟡 Média</option>
+                                    <option value="alta">🔴 Alta</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="tarefaStatus" class="form-label">Status</label>
+                                <select class="form-select" id="tarefaStatus">
+                                    <option value="pendente" selected>Pendente</option>
+                                    <option value="em_progresso">Em Progresso</option>
+                                    <option value="concluida">Concluída</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Relacionar com Conta</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="tarefaTemConta" onchange="toggleContaRelacionada()">
+                                <label class="form-check-label" for="tarefaTemConta">
+                                    Esta tarefa está relacionada com uma conta
+                                </label>
+                            </div>
+                        </div>
+
+                        <div id="contaRelacionadaSection" style="display: none;">
+                            <div class="mb-3">
+                                <label for="tarefaContaId" class="form-label">Selecionar Conta</label>
+                                <select class="form-select" id="tarefaContaId">
+                                    <option value="">Nenhuma</option>
+                                </select>
+                                <small class="text-muted">Vincule esta tarefa a uma conta pendente</small>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar Tarefa</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Nova Pessoa -->
+    <div class="modal fade" id="pessoaModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="pessoaModalTitle">Nova Pessoa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="pessoaForm">
+                        <input type="hidden" id="pessoaId">
+                        <div class="mb-3">
+                            <label for="pessoaNome" class="form-label">Nome</label>
+                            <input type="text" class="form-control" id="pessoaNome" required placeholder="Nome da pessoa">
+                        </div>
+                        <div class="mb-3">
+                            <label for="pessoaEmail" class="form-label">Email (opcional)</label>
+                            <input type="email" class="form-control" id="pessoaEmail" placeholder="email@exemplo.com">
+                        </div>
+                        <div class="mb-3">
+                            <label for="pessoaTelefone" class="form-label">Telefone (opcional)</label>
+                            <input type="tel" class="form-control" id="pessoaTelefone" placeholder="+351 912 345 678">
+                        </div>
+                        <div class="mb-3">
+                            <label for="pessoaCor" class="form-label">Cor (para identificação)</label>
+                            <input type="color" class="form-control form-control-color" id="pessoaCor" value="#3498db">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" form="pessoaForm" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
+    <script>
+        // Check authentication
+        if (!Auth.isLoggedIn()) {
+            window.location.href = 'index.html';
+        }
+
+        // Initialize garantia section visibility on modal open
+        document.getElementById('faturaModal').addEventListener('show.bs.modal', function() {
+            setTimeout(() => toggleGarantia(), 50);
+        });
+
+        // Reset form and hide garantia section on modal close
+        document.getElementById('faturaModal').addEventListener('hidden.bs.modal', function() {
+            document.getElementById('faturaForm').reset();
+            document.getElementById('faturaId').value = '';
+            document.getElementById('faturaModalTitle').textContent = 'Nova Fatura';
+            document.getElementById('garantiaSection').style.display = 'none';
+        });
+
+        // Set user name
+        const user = Auth.getCurrentUser();
+        document.getElementById('userName'). textContent = `Olá, ${user.name}! `;
+
+        // Logout
+        function logout() {
+            Auth.logout();
+            window.location. href = 'index.html';
+        }
+
+        // Section navigation
+        function showSection(section) {
+            document.querySelectorAll('.nav-tab'). forEach(tab => tab.classList. remove('active'));
+            document.querySelectorAll('.section'). forEach(sec => sec.classList. add('hidden'));
+            
+            document.querySelector(`[onclick="showSection('${section}')"]`). classList.add('active');
+            document.getElementById(`${section}Section`).classList.remove('hidden');
+            
+            // Refresh data
+            if (section === 'dashboard') renderDashboard();
+            if (section === 'contas') renderContas();
+            if (section === 'faturas') renderFaturas();
+            if (section === 'garantias') renderGarantias();
+            if (section === 'pessoas') renderPessoas();
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            document. getElementById(modalId). classList.remove('hidden');
+            if (modalId === 'contaModal' || modalId === 'pessoaModal') {
+                updatePessoasSelect();
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+            document.getElementById(modalId).querySelector('form').reset();
+            // Clear hidden ID fields
+            const idField = document.getElementById(modalId. replace('Modal', 'Id'));
+            if (idField) idField.value = '';
+        }
+
+        // Update pessoas dropdown
+        function updatePessoasSelect() {
+            const pessoas = DataStore.getPessoas();
+            const select = document.getElementById('contaResponsavel');
+            const filterSelect = document.getElementById('filtroPessoaConta');
+            
+            select.innerHTML = '<option value="">Selecione...</option>';
+            filterSelect.innerHTML = '<option value="todas">Todas as Pessoas</option>';
+            
+            pessoas.forEach(p => {
+                select.innerHTML += `<option value="${p. id}">${p. nome}</option>`;
+                filterSelect.innerHTML += `<option value="${p.id}">${p.nome}</option>`;
+            });
+        }
+
+        // Form submissions
+        document.getElementById('contaForm'). addEventListener('submit', (e) => {
+            e.preventDefault();
+            const conta = {
+                id: document.getElementById('contaId').value || Date.now(). toString(),
+                descricao: document. getElementById('contaDescricao').value,
+                valor: parseFloat(document.getElementById('contaValor').value),
+                vencimento: document. getElementById('contaVencimento').value,
+                responsavel: document.getElementById('contaResponsavel').value,
+                categoria: document. getElementById('contaCategoria').value,
+                recorrente: document.getElementById('contaRecorrente'). value,
+                notas: document.getElementById('contaNotas').value,
+                status: 'pendente',
+                createdAt: new Date().toISOString()
+            };
+            DataStore.saveConta(conta);
+            closeModal('contaModal');
+            renderContas();
+            renderDashboard();
+            renderCalendar();
+        });
+
+        // Toggle garantia section based on category
+        function toggleGarantia() {
+            const categoria = document.getElementById('faturaCategoria').value;
+            const garantiaSection = document.getElementById('garantiaSection');
+            const comGarantiaCheck = document.getElementById('faturaComGarantia');
+            
+            if (categoria === 'eletronicos' || categoria === 'eletrodomesticos') {
+                garantiaSection.style.display = 'block';
+                comGarantiaCheck.checked = true;
+            } else {
+                garantiaSection.style.display = 'none';
+                comGarantiaCheck.checked = false;
+            }
+        }
+
+        // Toggle duracao section based on checkbox
+        document.getElementById('faturaComGarantia').addEventListener('change', function() {
+            document.getElementById('garantiaDuracaoSection').style.display = this.checked ? 'block' : 'none';
+        });
+
+        document.getElementById('faturaForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const faturaId = document.getElementById('faturaId').value || Date.now().toString();
+            const categoria = document.getElementById('faturaCategoria').value;
+            const comGarantia = document.getElementById('faturaComGarantia').checked;
+            const isEditing = document.getElementById('faturaId').value !== '';
+            
+            const fatura = {
+                id: faturaId,
+                descricao: document.getElementById('faturaDescricao').value,
+                valor: parseFloat(document.getElementById('faturaValor').value),
+                data: document.getElementById('faturaData').value,
+                local: document.getElementById('faturaLocal').value,
+                categoria: categoria,
+                numero: document.getElementById('faturaNumero').value,
+                notas: document.getElementById('faturaNotas').value,
+                serial: document.getElementById('faturaSerial').value,
+                comGarantia: comGarantia,
+                createdAt: new Date().toISOString()
+            };
+            DataStore.saveFatura(fatura);
+            
+            // Criar ou atualizar garantia automaticamente se aplicável
+            if (comGarantia && (categoria === 'eletronicos' || categoria === 'eletrodomesticos')) {
+                const duracao = parseInt(document.getElementById('faturaGarantiaDuracao').value);
+                const dataCompra = document.getElementById('faturaData').value;
+                const dataExpiracao = new Date(dataCompra);
+                dataExpiracao.setMonth(dataExpiracao.getMonth() + duracao);
+                
+                const garantia = {
+                    id: 'gar_' + faturaId,
+                    faturaId: faturaId,
+                    produto: fatura.descricao,
+                    dataCompra: dataCompra,
+                    duracao: duracao,
+                    dataExpiracao: dataExpiracao.toISOString().split('T')[0],
+                    local: fatura.local,
+                    valor: fatura.valor,
+                    serial: fatura.serial || '',
+                    notas: 'Garantia criada automaticamente a partir da fatura' + (fatura.numero ? ' ' + fatura.numero : ''),
+                    createdAt: new Date().toISOString()
+                };
+                DataStore.saveGarantia(garantia);
+            } else if (isEditing) {
+                // Se estiver editando e desmarcar garantia, remover garantia existente
+                const garantias = DataStore.getGarantias();
+                const garantiaExistente = garantias.find(g => g.faturaId === faturaId);
+                if (garantiaExistente) {
+                    DataStore.deleteGarantia(garantiaExistente.id);
+                }
+            }
+            
+            bootstrap.Modal.getInstance(document.getElementById('faturaModal')).hide();
+            renderFaturas();
+            renderGarantias();
+            renderDashboard();
+            renderCalendar();
+        });
+
+        document.getElementById('garantiaForm'). addEventListener('submit', (e) => {
+            e.preventDefault();
+            const dataCompra = document. getElementById('garantiaDataCompra').value;
+            const duracao = parseInt(document.getElementById('garantiaDuracao').value);
+            const dataExpiracao = new Date(dataCompra);
+            dataExpiracao.setMonth(dataExpiracao.getMonth() + duracao);
+
+            const garantia = {
+                id: document.getElementById('garantiaId'). value || Date.now().toString(),
+                produto: document.getElementById('garantiaProduto').value,
+                dataCompra: dataCompra,
+                duracao: duracao,
+                dataExpiracao: dataExpiracao.toISOString(). split('T')[0],
+                local: document.getElementById('garantiaLocal').value,
+                valor: parseFloat(document.getElementById('garantiaValor').value) || 0,
+                serial: document.getElementById('garantiaSerial'). value,
+                notas: document.getElementById('garantiaNotas').value,
+                createdAt: new Date().toISOString()
+            };
+            DataStore.saveGarantia(garantia);
+            closeModal('garantiaModal');
+            renderGarantias();
+            renderDashboard();
+        });
+
+        document.getElementById('pessoaForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const pessoa = {
+                id: document.getElementById('pessoaId'). value || Date.now().toString(),
+                nome: document.getElementById('pessoaNome').value,
+                email: document.getElementById('pessoaEmail').value,
+                telefone: document. getElementById('pessoaTelefone').value,
+                cor: document.getElementById('pessoaCor').value,
+                createdAt: new Date(). toISOString()
+            };
+            DataStore.savePessoa(pessoa);
+            closeModal('pessoaModal');
+            renderPessoas();
+            updatePessoasSelect();
+            updateTarefasPessoasSelects();
+        });
+
+        // Tarefa Form Submission
+        document.getElementById('tarefaForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const tarefa = {
+                id: document.getElementById('tarefaId').value || Date.now().toString(),
+                titulo: document.getElementById('tarefaTitulo').value,
+                descricao: document.getElementById('tarefaDescricao').value,
+                responsavel: document.getElementById('tarefaResponsavel').value,
+                criador: user.id,
+                criadorNome: user.name,
+                prazo: document.getElementById('tarefaPrazo').value,
+                prioridade: document.getElementById('tarefaPrioridade').value,
+                status: document.getElementById('tarefaStatus').value,
+                contaId: document.getElementById('tarefaTemConta').checked ? document.getElementById('tarefaContaId').value : null,
+                createdAt: new Date().toISOString()
+            };
+            DataStore.saveTarefa(tarefa);
+            bootstrap.Modal.getInstance(document.getElementById('tarefaModal')).hide();
+            renderTarefas();
+            renderCalendar();
+            renderDashboard();
+        });
+
+        // Toggle conta relacionada section
+        function toggleContaRelacionada() {
+            const checkbox = document.getElementById('tarefaTemConta');
+            const section = document.getElementById('contaRelacionadaSection');
+            section.style.display = checkbox.checked ? 'block' : 'none';
+            if (checkbox.checked) {
+                updateContasSelect();
+            }
+        }
+
+        // Update contas select for tarefas
+        function updateContasSelect() {
+            const contas = DataStore.getContas().filter(c => c.status !== 'paga');
+            const select = document.getElementById('tarefaContaId');
+            select.innerHTML = '<option value="">Nenhuma</option>';
+            contas.forEach(c => {
+                select.innerHTML += `<option value="${c.id}">${c.descricao} - ${c.valor.toFixed(2)}€ (${formatDate(c.vencimento)})</option>`;
+            });
+        }
+
+        // Update pessoas selects for tarefas
+        function updateTarefasPessoasSelects() {
+            const pessoas = DataStore.getPessoas();
+            const responsavelSelect = document.getElementById('tarefaResponsavel');
+            const filtroResponsavel = document.getElementById('filtroResponsavelTarefa');
+            const filtroCriador = document.getElementById('filtroCriadorTarefa');
+            
+            responsavelSelect.innerHTML = '<option value="">Selecione uma pessoa...</option>';
+            filtroResponsavel.innerHTML = '<option value="todas">Todas as Pessoas</option>';
+            filtroCriador.innerHTML = '<option value="todas">Todos os Criadores</option>';
+            
+            pessoas.forEach(p => {
+                responsavelSelect.innerHTML += `<option value="${p.id}">${p.nome}</option>`;
+                filtroResponsavel.innerHTML += `<option value="${p.id}">${p.nome}</option>`;
+                filtroCriador.innerHTML += `<option value="${p.id}">${p.nome}</option>`;
+            });
+        }
+
+        // Render Tarefas
+        function renderTarefas() {
+            const tarefas = DataStore.getTarefas();
+            const pessoas = DataStore.getPessoas();
+            const contas = DataStore.getContas();
+            
+            const filtroStatus = document.getElementById('filtroStatusTarefa').value;
+            const filtroResponsavel = document.getElementById('filtroResponsavelTarefa').value;
+            const filtroCriador = document.getElementById('filtroCriadorTarefa').value;
+            const filtroPrioridade = document.getElementById('filtroPrioridadeTarefa').value;
+            
+            const hoje = new Date();
+            hoje.setHours(0, 0, 0, 0);
+
+            let filtered = tarefas;
+            
+            if (filtroStatus !== 'todas') {
+                filtered = filtered.filter(t => t.status === filtroStatus);
+            }
+            if (filtroResponsavel !== 'todas') {
+                filtered = filtered.filter(t => t.responsavel === filtroResponsavel);
+            }
+            if (filtroCriador !== 'todas') {
+                filtered = filtered.filter(t => t.criador === filtroCriador);
+            }
+            if (filtroPrioridade !== 'todas') {
+                filtered = filtered.filter(t => t.prioridade === filtroPrioridade);
+            }
+
+            const tbody = document.getElementById('tarefasTableBody');
+            tbody.innerHTML = filtered.length > 0
+                ? filtered.map(t => {
+                    const pessoa = pessoas.find(p => p.id === t.responsavel);
+                    const conta = t.contaId ? contas.find(c => c.id === t.contaId) : null;
+                    const prazoDate = new Date(t.prazo);
+                    const diasRestantes = Math.ceil((prazoDate - hoje) / (1000 * 60 * 60 * 24));
+                    
+                    const statusClass = t.status === 'concluida' ? 'success' : t.status === 'em_progresso' ? 'primary' : 'warning';
+                    const statusText = t.status === 'concluida' ? 'Concluída' : t.status === 'em_progresso' ? 'Em Progresso' : 'Pendente';
+                    
+                    const prioridadeClass = t.prioridade === 'alta' ? 'danger' : t.prioridade === 'media' ? 'warning' : 'success';
+                    const prioridadeIcon = t.prioridade === 'alta' ? '🔴' : t.prioridade === 'media' ? '🟡' : '🟢';
+                    
+                    const prazoClass = diasRestantes < 0 && t.status !== 'concluida' ? 'text-danger fw-bold' : diasRestantes <= 3 && t.status !== 'concluida' ? 'text-warning fw-bold' : '';
+                    
+                    return `<tr class="${t.status === 'concluida' ? 'table-success' : ''}">
+                        <td>
+                            <strong>${t.titulo}</strong>
+                            ${t.descricao ? `<br><small class="text-muted">${t.descricao}</small>` : ''}
+                        </td>
+                        <td>
+                            ${pessoa ? `<span class="badge" style="background:${pessoa.cor}">${pessoa.nome}</span>` : '-'}
+                        </td>
+                        <td><small>${t.criadorNome || 'Sistema'}</small></td>
+                        <td class="${prazoClass}">
+                            ${formatDate(t.prazo)}
+                            ${diasRestantes < 0 && t.status !== 'concluida' ? `<br><small class="text-danger">Atrasada ${Math.abs(diasRestantes)} dias</small>` : ''}
+                            ${diasRestantes >= 0 && diasRestantes <= 3 && t.status !== 'concluida' ? `<br><small class="text-warning">${diasRestantes} dias restantes</small>` : ''}
+                        </td>
+                        <td><span class="badge bg-${prioridadeClass}">${prioridadeIcon} ${t.prioridade.charAt(0).toUpperCase() + t.prioridade.slice(1)}</span></td>
+                        <td><span class="badge bg-${statusClass}">${statusText}</span></td>
+                        <td>
+                            ${conta ? `<small><i class="bi bi-wallet2 text-primary"></i> ${conta.descricao}</small>` : '-'}
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                ${t.status !== 'concluida' ? `<button class="btn btn-success btn-sm" onclick="concluirTarefa('${t.id}')" title="Concluir"><i class="bi bi-check-lg"></i></button>` : ''}
+                                <button class="btn btn-primary btn-sm" onclick="editarTarefa('${t.id}')" title="Editar"><i class="bi bi-pencil"></i></button>
+                                <button class="btn btn-danger btn-sm" onclick="eliminarTarefa('${t.id}')" title="Eliminar"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>`;
+                }).join('')
+                : '<tr><td colspan="8" class="text-center text-muted py-4">Nenhuma tarefa encontrada</td></tr>';
+        }
+
+        // Concluir Tarefa
+        function concluirTarefa(id) {
+            const tarefas = DataStore.getTarefas();
+            const tarefa = tarefas.find(t => t.id === id);
+            if (tarefa) {
+                tarefa.status = 'concluida';
+                tarefa.dataConclusao = new Date().toISOString();
+                DataStore.saveTarefa(tarefa);
+                renderTarefas();
+                renderCalendar();
+                renderDashboard();
+            }
+        }
+
+        // Editar Tarefa
+        function editarTarefa(id) {
+            const tarefa = DataStore.getTarefas().find(t => t.id === id);
+            if (tarefa) {
+                document.getElementById('tarefaId').value = tarefa.id;
+                document.getElementById('tarefaTitulo').value = tarefa.titulo;
+                document.getElementById('tarefaDescricao').value = tarefa.descricao || '';
+                document.getElementById('tarefaResponsavel').value = tarefa.responsavel;
+                document.getElementById('tarefaPrazo').value = tarefa.prazo;
+                document.getElementById('tarefaPrioridade').value = tarefa.prioridade;
+                document.getElementById('tarefaStatus').value = tarefa.status;
+                
+                if (tarefa.contaId) {
+                    document.getElementById('tarefaTemConta').checked = true;
+                    toggleContaRelacionada();
+                    document.getElementById('tarefaContaId').value = tarefa.contaId;
+                }
+                
+                document.getElementById('tarefaModalTitle').textContent = 'Editar Tarefa';
+                new bootstrap.Modal(document.getElementById('tarefaModal')).show();
+            }
+        }
+
+        // Eliminar Tarefa
+        function eliminarTarefa(id) {
+            if (confirm('Tem a certeza que deseja eliminar esta tarefa?')) {
+                DataStore.deleteTarefa(id);
+                renderTarefas();
+                renderCalendar();
+                renderDashboard();
+            }
+        }
+
+        // Reset tarefa modal on close
+        document.getElementById('tarefaModal').addEventListener('hidden.bs.modal', function() {
+            document.getElementById('tarefaForm').reset();
+            document.getElementById('tarefaId').value = '';
+            document.getElementById('tarefaModalTitle').textContent = 'Nova Tarefa';
+            document.getElementById('contaRelacionadaSection').style.display = 'none';
+            document.getElementById('tarefaStatus').value = 'pendente';
+        });
+
+        // Render functions
+        function renderDashboard() {
+            const contas = DataStore. getContas();
+            const garantias = DataStore. getGarantias();
+            const hoje = new Date();
+            hoje.setHours(0, 0, 0, 0);
+
+            // Stats
+            const pendentes = contas. filter(c => c.status === 'pendente');
+            const aVencer = pendentes.filter(c => {
+                const venc = new Date(c.vencimento);
+                const diff = (venc - hoje) / (1000 * 60 * 60 * 24);
+                return diff >= 0 && diff <= 7;
+            });
+            const atrasadas = pendentes.filter(c => new Date(c.vencimento) < hoje);
+            const total = pendentes.reduce((sum, c) => sum + c. valor, 0);
+
+            document.getElementById('totalContas').textContent = pendentes.length;
+            document.getElementById('totalValor').textContent = `${total.toFixed(2)}€`;
+
+            // Tarefas stats
+            const tarefas = DataStore.getTarefas();
+            const tarefasPendentesTotal = tarefas.filter(t => t.status !== 'concluida');
+            const tarefasAtrasadasTotal = tarefasPendentesTotal.filter(t => new Date(t.prazo) < hoje);
+            
+            document.getElementById('totalTarefas').textContent = tarefasPendentesTotal.length;
+            document.getElementById('tarefasAtrasadas').textContent = tarefasAtrasadasTotal.length;
+
+            // Próximas contas
+            const proximas = [... pendentes]
+                .sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento))
+                .slice(0, 5);
+            
+            const proximasHtml = proximas.length > 0 
+                ? proximas.map(c => {
+                    const venc = new Date(c.vencimento);
+                    const diff = Math.ceil((venc - hoje) / (1000 * 60 * 60 * 24));
+                    const borderClass = diff < 0 ? 'border-danger' : diff <= 7 ? 'border-warning' : '';
+                    return `<li class="list-group-item d-flex justify-content-between align-items-center ${borderClass} border-start border-4">
+                        <span>${c.descricao}</span>
+                        <span class="badge bg-secondary">${c.valor.toFixed(2)}€ - ${formatDate(c.vencimento)}</span>
+                    </li>`;
+                }).join('')
+                : '<li class="list-group-item text-center text-muted">Nenhuma conta pendente 🎉</li>';
+            document.getElementById('proximasContas').innerHTML = proximasHtml;
+
+            // Garantias a expirar
+            const garantiasExpirando = garantias
+                .filter(g => {
+                    const exp = new Date(g.dataExpiracao);
+                    const diff = (exp - hoje) / (1000 * 60 * 60 * 24);
+                    return diff >= 0 && diff <= 60;
+                })
+                .sort((a, b) => new Date(a.dataExpiracao) - new Date(b. dataExpiracao))
+                .slice(0, 5);
+
+            const garantiasHtml = garantiasExpirando.length > 0
+                ? garantiasExpirando.map(g => {
+                    const dias = Math.ceil((new Date(g.dataExpiracao) - hoje) / (1000 * 60 * 60 * 24));
+                    const borderClass = dias <= 30 ? 'border-warning border-start border-4' : '';
+                    return `<li class="list-group-item d-flex justify-content-between align-items-center ${borderClass}">
+                        <span>${g.produto}</span>
+                        <span class="badge bg-secondary">${dias} dias restantes</span>
+                    </li>`;
+                }).join('')
+                : '<li class="list-group-item text-center text-muted">Nenhuma garantia a expirar em breve ✓</li>';
+            document.getElementById('garantiasExpirar').innerHTML = garantiasHtml;
+
+            // Tarefas pendentes (reutilizar variável tarefas já carregada)
+            const pessoas = DataStore.getPessoas();
+            const tarefasPendentes = tarefas
+                .filter(t => t.status !== 'concluida')
+                .sort((a, b) => new Date(a.prazo) - new Date(b.prazo))
+                .slice(0, 5);
+
+            const tarefasHtml = tarefasPendentes.length > 0
+                ? tarefasPendentes.map(t => {
+                    const pessoa = pessoas.find(p => p.id === t.responsavel);
+                    const prazoDate = new Date(t.prazo);
+                    const diasRestantes = Math.ceil((prazoDate - hoje) / (1000 * 60 * 60 * 24));
+                    const borderClass = diasRestantes < 0 ? 'border-danger' : diasRestantes <= 3 ? 'border-warning' : '';
+                    const prioridadeIcon = t.prioridade === 'alta' ? '🔴' : t.prioridade === 'media' ? '🟡' : '🟢';
+                    return `<li class="list-group-item d-flex justify-content-between align-items-center ${borderClass} border-start border-4">
+                        <div>
+                            <div>${prioridadeIcon} ${t.titulo}</div>
+                            <small class="text-muted">${pessoa ? pessoa.nome : 'Sem responsável'}</small>
+                        </div>
+                        <span class="badge bg-secondary">${formatDate(t.prazo)}</span>
+                    </li>`;
+                }).join('')
+                : '<li class="list-group-item text-center text-muted">Nenhuma tarefa pendente 🎉</li>';
+            document.getElementById('tarefasPendentes').innerHTML = tarefasHtml;
+        }
+
+        function renderContas() {
+            const contas = DataStore.getContas();
+            const pessoas = DataStore.getPessoas();
+            const filtroStatus = document.getElementById('filtroStatusConta'). value;
+            const filtroPessoa = document.getElementById('filtroPessoaConta').value;
+            const hoje = new Date();
+            hoje.setHours(0, 0, 0, 0);
+
+            let filtered = contas;
+            
+            // Update status based on date
+            filtered = filtered.map(c => {
+                if (c.status === 'pendente' && new Date(c.vencimento) < hoje) {
+                    c.status = 'atrasada';
+                }
+                return c;
+            });
+
+            if (filtroStatus !== 'todas') {
+                filtered = filtered.filter(c => c.status === filtroStatus);
+            }
+            if (filtroPessoa !== 'todas') {
+                filtered = filtered.filter(c => c.responsavel === filtroPessoa);
+            }
+
+            const tbody = document.getElementById('contasTableBody');
+            tbody.innerHTML = filtered.length > 0 
+                ? filtered.map(c => {
+                    const pessoa = pessoas.find(p => p.id === c.responsavel);
+                    const statusClass = c.status === 'paga' ? 'success' : c.status === 'atrasada' ?  'danger' : 'warning';
+                    const statusText = c.status === 'paga' ? 'Paga' : c. status === 'atrasada' ? 'Atrasada' : 'Pendente';
+                    return `<tr>
+                        <td>${c.descricao}</td>
+                        <td>${c.valor.toFixed(2)}€</td>
+                        <td>${formatDate(c.vencimento)}</td>
+                        <td>
+                            ${pessoa ? `<span class="badge" style="background:${pessoa.cor}">${pessoa.nome}</span>` : '-'}
+                        </td>
+                        <td><span class="status ${statusClass}">${statusText}</span></td>
+                        <td class="actions">
+                            ${c.status !== 'paga' ? `<button class="btn-icon" onclick="marcarPaga('${c.id}')" title="Marcar como paga">✓</button>` : ''}
+                            <button class="btn-icon" onclick="editarConta('${c.id}')" title="Editar">✏️</button>
+                            <button class="btn-icon danger" onclick="eliminarConta('${c.id}')" title="Eliminar">🗑️</button>
+                        </td>
+                    </tr>`;
+                }).join('')
+                : '<tr><td colspan="6" class="empty">Nenhuma conta encontrada</td></tr>';
+        }
+
+        function renderFaturas() {
+            const faturas = DataStore.getFaturas();
+            const tbody = document. getElementById('faturasTableBody');
+            
+            tbody.innerHTML = faturas.length > 0
+                ? faturas.map(f => {
+                    const garantias = DataStore.getGarantias();
+                    const temGarantia = garantias.some(g => g.faturaId === f.id);
+                    return `<tr>
+                        <td>
+                            ${f.descricao}
+                            ${temGarantia ? '<br><small class="text-success"><i class="bi bi-shield-check"></i> Com garantia</small>' : ''}
+                        </td>
+                        <td><strong>${f.valor.toFixed(2)}€</strong></td>
+                        <td>${formatDate(f.data)}</td>
+                        <td>${f.local || '-'}</td>
+                        <td><span class="badge bg-primary">${f.categoria}</span></td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                ${temGarantia ? `<button class="btn btn-success btn-sm" onclick="verGarantia('${f.id}')" title="Ver Garantia"><i class="bi bi-shield-check"></i></button>` : ''}
+                                <button class="btn btn-primary btn-sm" onclick="editarFatura('${f.id}')" title="Editar"><i class="bi bi-pencil"></i></button>
+                                <button class="btn btn-danger btn-sm" onclick="eliminarFatura('${f.id}')" title="Eliminar"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>`;
+                }).join('')
+                : '<tr><td colspan="6" class="text-center text-muted py-4">Nenhuma fatura registada</td></tr>';
+        }
+
+        function renderGarantias() {
+            const garantias = DataStore.getGarantias();
+            const filtro = document.getElementById('filtroStatusGarantia'). value;
+            const hoje = new Date();
+            hoje.setHours(0, 0, 0, 0);
+
+            let filtered = garantias. map(g => {
+                const exp = new Date(g.dataExpiracao);
+                const diff = Math.ceil((exp - hoje) / (1000 * 60 * 60 * 24));
+                return { ...g, diasRestantes: diff };
+            });
+
+            if (filtro === 'ativa') {
+                filtered = filtered.filter(g => g.diasRestantes > 0);
+            } else if (filtro === 'expirada') {
+                filtered = filtered. filter(g => g.diasRestantes <= 0);
+            } else if (filtro === 'expirando') {
+                filtered = filtered. filter(g => g.diasRestantes > 0 && g.diasRestantes <= 30);
+            }
+
+            const grid = document.getElementById('garantiasGrid');
+            grid.innerHTML = filtered.length > 0
+                ? filtered.map(g => {
+                    const statusClass = g.diasRestantes <= 0 ? 'expired' : g.diasRestantes <= 30 ? 'warning' : 'active';
+                    const statusText = g. diasRestantes <= 0 ? 'Expirada' : g.diasRestantes <= 30 ? 'A Expirar' : 'Ativa';
+                    return `<div class="garantia-card ${statusClass}">
+                        <div class="garantia-header">
+                            <h4>
+                                ${g.faturaId ? '<i class="bi bi-receipt text-primary" title="Criada a partir de fatura"></i> ' : ''}
+                                ${g.produto}
+                            </h4>
+                            <span class="garantia-status">${statusText}</span>
+                        </div>
+                        <div class="garantia-body">
+                            <p><strong>Compra:</strong> ${formatDate(g.dataCompra)}</p>
+                            <p><strong>Expira:</strong> ${formatDate(g.dataExpiracao)}</p>
+                            <p><strong>Local:</strong> ${g.local || '-'}</p>
+                            ${g.valor ?  `<p><strong>Valor:</strong> ${g.valor.toFixed(2)}€</p>` : ''}
+                            ${g.serial ? `<p><strong>S/N:</strong> ${g.serial}</p>` : ''}
+                            <p class="dias-restantes">
+                                ${g. diasRestantes > 0 ? `${g.diasRestantes} dias restantes` : 'Garantia expirada'}
+                            </p>
+                        </div>
+                        <div class="garantia-actions">
+                            <button class="btn-icon" onclick="editarGarantia('${g.id}')">✏️</button>
+                            <button class="btn-icon danger" onclick="eliminarGarantia('${g.id}')">🗑️</button>
+                        </div>
+                    </div>`;
+                }).join('')
+                : '<p class="empty">Nenhuma garantia encontrada</p>';
+        }
+
+        function renderPessoas() {
+            const pessoas = DataStore.getPessoas();
+            const contas = DataStore. getContas();
+
+            const grid = document.getElementById('pessoasGrid');
+            grid.innerHTML = pessoas.length > 0
+                ?  pessoas.map(p => {
+                    const contasPessoa = contas. filter(c => c. responsavel === p. id && c.status !== 'paga');
+                    const total = contasPessoa.reduce((sum, c) => sum + c.valor, 0);
+                    return `<div class="pessoa-card">
+                        <div class="pessoa-avatar" style="background:${p.cor}">${p.nome. charAt(0).toUpperCase()}</div>
+                        <div class="pessoa-info">
+                            <h4>${p.nome}</h4>
+                            ${p.email ? `<p>📧 ${p. email}</p>` : ''}
+                            ${p.telefone ? `<p>📱 ${p.telefone}</p>` : ''}
+                            <p class="pessoa-stats">${contasPessoa. length} contas pendentes (${total.toFixed(2)}€)</p>
+                        </div>
+                        <div class="pessoa-actions">
+                            <button class="btn-icon" onclick="editarPessoa('${p.id}')">✏️</button>
+                            <button class="btn-icon danger" onclick="eliminarPessoa('${p.id}')">🗑️</button>
+                        </div>
+                    </div>`;
+                }).join('')
+                : '<p class="empty">Nenhuma pessoa registada.  Adicione pessoas para atribuir contas. </p>';
+        }
+
+        // Action functions
+        function marcarPaga(id) {
+            const contas = DataStore. getContas();
+            const conta = contas.find(c => c. id === id);
+            if (conta) {
+                conta. status = 'paga';
+                conta.dataPagamento = new Date(). toISOString();
+                DataStore. saveConta(conta);
+                renderContas();
+                renderDashboard();
+                renderCalendar();
+            }
+        }
+
+        function editarConta(id) {
+            const conta = DataStore.getContas().find(c => c.id === id);
+            if (conta) {
+                document.getElementById('contaId').value = conta.id;
+                document.getElementById('contaDescricao'). value = conta.descricao;
+                document.getElementById('contaValor').value = conta.valor;
+                document.getElementById('contaVencimento').value = conta.vencimento;
+                document. getElementById('contaCategoria').value = conta.categoria;
+                document.getElementById('contaRecorrente').value = conta. recorrente;
+                document.getElementById('contaNotas').value = conta.notas || '';
+                updatePessoasSelect();
+                document.getElementById('contaResponsavel').value = conta.responsavel;
+                document.getElementById('contaModalTitle').textContent = 'Editar Conta';
+                openModal('contaModal');
+            }
+        }
+
+        function eliminarConta(id) {
+            if (confirm('Tem a certeza que deseja eliminar esta conta?')) {
+                DataStore.deleteConta(id);
+                renderContas();
+                renderDashboard();
+                renderCalendar();
+            }
+        }
+
+        function editarFatura(id) {
+            const fatura = DataStore.getFaturas().find(f => f.id === id);
+            if (fatura) {
+                document.getElementById('faturaId').value = fatura.id;
+                document.getElementById('faturaDescricao').value = fatura.descricao;
+                document.getElementById('faturaValor').value = fatura.valor;
+                document.getElementById('faturaData').value = fatura.data;
+                document.getElementById('faturaLocal').value = fatura.local || '';
+                document.getElementById('faturaCategoria').value = fatura.categoria;
+                document.getElementById('faturaNumero').value = fatura.numero || '';
+                document.getElementById('faturaNotas').value = fatura.notas || '';
+                document.getElementById('faturaSerial').value = fatura.serial || '';
+                document.getElementById('faturaComGarantia').checked = fatura.comGarantia || false;
+                
+                // Preencher duração da garantia se existir
+                const garantias = DataStore.getGarantias();
+                const garantia = garantias.find(g => g.faturaId === id);
+                if (garantia) {
+                    document.getElementById('faturaGarantiaDuracao').value = garantia.duracao;
+                }
+                
+                document.getElementById('faturaModalTitle').textContent = 'Editar Fatura';
+                toggleGarantia();
+                new bootstrap.Modal(document.getElementById('faturaModal')).show();
+            }
+        }
+
+        function verGarantia(faturaId) {
+            const garantias = DataStore.getGarantias();
+            const garantia = garantias.find(g => g.faturaId === faturaId);
+            if (garantia) {
+                const garantiasTab = new bootstrap.Tab(document.getElementById('garantias-tab'));
+                garantiasTab.show();
+                renderGarantias();
+            }
+        }
+
+        function eliminarFatura(id) {
+            if (confirm('Tem a certeza que deseja eliminar esta fatura?')) {
+                DataStore.deleteFatura(id);
+                const garantias = DataStore.getGarantias();
+                const garantiaRelacionada = garantias.find(g => g.faturaId === id);
+                if (garantiaRelacionada && confirm('Deseja também eliminar a garantia associada?')) {
+                    DataStore.deleteGarantia(garantiaRelacionada.id);
+                }
+                renderFaturas();
+                renderGarantias();
+                renderCalendar();
+            }
+        }
+
+        function editarGarantia(id) {
+            const garantia = DataStore.getGarantias(). find(g => g.id === id);
+            if (garantia) {
+                document.getElementById('garantiaId').value = garantia.id;
+                document.getElementById('garantiaProduto').value = garantia.produto;
+                document.getElementById('garantiaDataCompra').value = garantia.dataCompra;
+                document. getElementById('garantiaDuracao').value = garantia.duracao;
+                document.getElementById('garantiaLocal').value = garantia.local || '';
+                document.getElementById('garantiaValor').value = garantia.valor || '';
+                document.getElementById('garantiaSerial').value = garantia.serial || '';
+                document.getElementById('garantiaNotas').value = garantia.notas || '';
+                document. getElementById('garantiaModalTitle').textContent = 'Editar Garantia';
+                openModal('garantiaModal');
+            }
+        }
+
+        function eliminarGarantia(id) {
+            if (confirm('Tem a certeza que deseja eliminar esta garantia?')) {
+                DataStore.deleteGarantia(id);
+                renderGarantias();
+                renderDashboard();
+                renderCalendar();
+            }
+        }
+
+        function editarPessoa(id) {
+            const pessoa = DataStore.getPessoas(). find(p => p.id === id);
+            if (pessoa) {
+                document.getElementById('pessoaId').value = pessoa.id;
+                document.getElementById('pessoaNome'). value = pessoa.nome;
+                document. getElementById('pessoaEmail').value = pessoa.email || '';
+                document. getElementById('pessoaTelefone').value = pessoa.telefone || '';
+                document.getElementById('pessoaCor').value = pessoa.cor;
+                document.getElementById('pessoaModalTitle').textContent = 'Editar Pessoa';
+                openModal('pessoaModal');
+            }
+        }
+
+        function eliminarPessoa(id) {
+            if (confirm('Tem a certeza que deseja eliminar esta pessoa?  As contas associadas ficarão sem responsável. ')) {
+                DataStore.deletePessoa(id);
+                renderPessoas();
+                updatePessoasSelect();
+            }
+        }
+
+        // Helper functions
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('pt-PT');
+        }
+
+        // Calendário
+        let currentCalendarDate = new Date();
+        let selectedDate = null;
+
+        function renderCalendar() {
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+            
+            // Update header
+            const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                              'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+            document.getElementById('currentMonthYear').textContent = `${monthNames[month]} ${year}`;
+            
+            // Get first day of month and number of days
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            
+            // Get events
+            const tarefas = DataStore.getTarefas();
+            const contas = DataStore.getContas();
+            const garantias = DataStore.getGarantias();
+            const faturas = DataStore.getFaturas();
+            const pessoas = DataStore.getPessoas();
+            const feriados = getFeriadosPortugal(year);
+            
+            // Build calendar
+            const tbody = document.getElementById('calendarBody');
+            tbody.innerHTML = '';
+            
+            let date = 1;
+            let hasMoreDays = true;
+            
+            for (let i = 0; i < 6 && hasMoreDays; i++) {
+                const row = document.createElement('tr');
+                
+                for (let j = 0; j < 7; j++) {
+                    const cell = document.createElement('td');
+                    cell.style.height = '120px';
+                    cell.style.verticalAlign = 'top';
+                    cell.style.padding = '5px';
+                    cell.style.cursor = 'pointer';
+                    cell.style.position = 'relative';
+                    
+                    if (i === 0 && j < firstDay) {
+                        cell.innerHTML = '';
+                        cell.style.backgroundColor = '#f8f9fa';
+                    } else if (date > daysInMonth) {
+                        cell.innerHTML = '';
+                        cell.style.backgroundColor = '#f8f9fa';
+                        hasMoreDays = false;
+                    } else {
+                        const currentDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
+                        const isToday = currentDate === new Date().toISOString().split('T')[0];
+                        const isFeriado = feriados[currentDate];
+                        
+                        // Day number
+                        let dayHtml = `<div style="font-weight: bold; margin-bottom: 5px; ${isToday ? 'color: #0d6efd;' : isFeriado ? 'color: #dc3545;' : ''}">${date}</div>`;
+                        
+                        // Feriado
+                        if (isFeriado) {
+                            dayHtml += `<div style="font-size: 10px; background: #dc3545; color: white; padding: 2px 4px; border-radius: 3px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                <i class="bi bi-star-fill"></i> ${isFeriado}
+                            </div>`;
+                        }
+                        
+                        // Tarefas
+                        const tarefasDoDia = tarefas.filter(t => t.prazo === currentDate && t.status !== 'concluida');
+                        tarefasDoDia.forEach(t => {
+                            const pessoa = pessoas.find(p => p.id === t.responsavel);
+                            const prioIcon = t.prioridade === 'alta' ? '🔴' : t.prioridade === 'media' ? '🟡' : '🟢';
+                            dayHtml += `<div style="font-size: 10px; background: #0d6efd; color: white; padding: 2px 4px; border-radius: 3px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${t.titulo} - ${pessoa ? pessoa.nome : ''}">
+                                ${prioIcon} ${t.titulo.substring(0, 15)}${t.titulo.length > 15 ? '...' : ''}
+                            </div>`;
+                        });
+                        
+                        // Contas
+                        const contasDoDia = contas.filter(c => c.vencimento === currentDate && c.status !== 'paga');
+                        contasDoDia.forEach(c => {
+                            dayHtml += `<div style="font-size: 10px; background: #0dcaf0; color: white; padding: 2px 4px; border-radius: 3px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${c.descricao} - ${c.valor.toFixed(2)}€">
+                                💰 ${c.descricao.substring(0, 15)}${c.descricao.length > 15 ? '...' : ''}
+                            </div>`;
+                        });
+                        
+                        // Garantias
+                        const garantiasDoDia = garantias.filter(g => g.dataExpiracao === currentDate);
+                        garantiasDoDia.forEach(g => {
+                            dayHtml += `<div style="font-size: 10px; background: #ffc107; color: black; padding: 2px 4px; border-radius: 3px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="Fim garantia: ${g.produto}">
+                                🛡️ ${g.produto.substring(0, 12)}${g.produto.length > 12 ? '...' : ''}
+                            </div>`;
+                        });
+                        
+                        // Faturas (data de compra)
+                        const faturasDoDia = faturas.filter(f => f.data === currentDate);
+                        faturasDoDia.forEach(f => {
+                            dayHtml += `<div style="font-size: 10px; background: #198754; color: white; padding: 2px 4px; border-radius: 3px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="Compra: ${f.descricao} - ${f.valor.toFixed(2)}€">
+                                🧾 ${f.descricao.substring(0, 12)}${f.descricao.length > 12 ? '...' : ''}
+                            </div>`;
+                        });
+                        
+                        cell.innerHTML = dayHtml;
+                        
+                        if (isToday) {
+                            cell.style.backgroundColor = '#e7f3ff';
+                            cell.style.border = '2px solid #0d6efd';
+                        }
+                        
+                        if (isFeriado) {
+                            cell.style.backgroundColor = '#ffe6e6';
+                        }
+                        
+                        // Click handler
+                        cell.onclick = () => showDayDetails(currentDate, date, monthNames[month], year);
+                        
+                        date++;
+                    }
+                    
+                    row.appendChild(cell);
+                }
+                
+                tbody.appendChild(row);
+            }
+        }
+
+        function showDayDetails(dateStr, day, monthName, year) {
+            selectedDate = dateStr;
+            const tarefas = DataStore.getTarefas();
+            const contas = DataStore.getContas();
+            const garantias = DataStore.getGarantias();
+            const faturas = DataStore.getFaturas();
+            const pessoas = DataStore.getPessoas();
+            const feriados = getFeriadosPortugal(year);
+            
+            let html = `<h6 class="mb-3">${day} de ${monthName} de ${year}</h6>`;
+            
+            const feriado = feriados[dateStr];
+            if (feriado) {
+                html += `<div class="alert alert-danger mb-3">
+                    <i class="bi bi-star-fill"></i> <strong>Feriado:</strong> ${feriado}
+                </div>`;
+            }
+            
+            // Tarefas
+            const tarefasDoDia = tarefas.filter(t => t.prazo === dateStr);
+            if (tarefasDoDia.length > 0) {
+                html += '<h6 class="mt-3"><i class="bi bi-list-check text-primary"></i> Tarefas</h6><ul class="list-group mb-3">';
+                tarefasDoDia.forEach(t => {
+                    const pessoa = pessoas.find(p => p.id === t.responsavel);
+                    const statusClass = t.status === 'concluida' ? 'success' : t.status === 'em_progresso' ? 'primary' : 'warning';
+                    const prioIcon = t.prioridade === 'alta' ? '🔴' : t.prioridade === 'media' ? '🟡' : '🟢';
+                    html += `<li class="list-group-item">
+                        ${prioIcon} <strong>${t.titulo}</strong><br>
+                        <small>Responsável: ${pessoa ? pessoa.nome : 'N/A'} | Status: <span class="badge bg-${statusClass}">${t.status}</span></small>
+                    </li>`;
+                });
+                html += '</ul>';
+            }
+            
+            // Contas
+            const contasDoDia = contas.filter(c => c.vencimento === dateStr);
+            if (contasDoDia.length > 0) {
+                html += '<h6 class="mt-3"><i class="bi bi-wallet2 text-info"></i> Contas a Vencer</h6><ul class="list-group mb-3">';
+                contasDoDia.forEach(c => {
+                    const pessoa = pessoas.find(p => p.id === c.responsavel);
+                    const statusClass = c.status === 'paga' ? 'success' : 'warning';
+                    html += `<li class="list-group-item">
+                        💰 <strong>${c.descricao}</strong> - ${c.valor.toFixed(2)}€<br>
+                        <small>Responsável: ${pessoa ? pessoa.nome : 'N/A'} | Status: <span class="badge bg-${statusClass}">${c.status}</span></small>
+                    </li>`;
+                });
+                html += '</ul>';
+            }
+            
+            // Garantias
+            const garantiasDoDia = garantias.filter(g => g.dataExpiracao === dateStr);
+            if (garantiasDoDia.length > 0) {
+                html += '<h6 class="mt-3"><i class="bi bi-shield-check text-warning"></i> Garantias a Expirar</h6><ul class="list-group mb-3">';
+                garantiasDoDia.forEach(g => {
+                    html += `<li class="list-group-item">
+                        🛡️ <strong>${g.produto}</strong><br>
+                        <small>Local: ${g.local || 'N/A'} | Valor: ${g.valor ? g.valor.toFixed(2) + '€' : 'N/A'}</small>
+                    </li>`;
+                });
+                html += '</ul>';
+            }
+            
+            // Faturas
+            const faturasDoDia = faturas.filter(f => f.data === dateStr);
+            if (faturasDoDia.length > 0) {
+                html += '<h6 class="mt-3"><i class="bi bi-receipt text-success"></i> Compras Realizadas</h6><ul class="list-group mb-3">';
+                faturasDoDia.forEach(f => {
+                    html += `<li class="list-group-item">
+                        🧾 <strong>${f.descricao}</strong> - ${f.valor.toFixed(2)}€<br>
+                        <small>Local: ${f.local || 'N/A'} | Categoria: ${f.categoria}</small>
+                    </li>`;
+                });
+                html += '</ul>';
+            }
+            
+            if (!feriado && tarefasDoDia.length === 0 && contasDoDia.length === 0 && garantiasDoDia.length === 0 && faturasDoDia.length === 0) {
+                html += '<p class="text-muted text-center">Nenhum evento neste dia</p>';
+            }
+            
+            document.getElementById('selectedDayEvents').innerHTML = html;
+        }
+
+        function previousMonth() {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+            renderCalendar();
+        }
+
+        function nextMonth() {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+            renderCalendar();
+        }
+
+        function goToToday() {
+            currentCalendarDate = new Date();
+            renderCalendar();
+            const today = new Date().toISOString().split('T')[0];
+            const todayParts = today.split('-');
+            showDayDetails(today, parseInt(todayParts[2]), 
+                ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'][parseInt(todayParts[1]) - 1],
+                parseInt(todayParts[0]));
+        }
+
+        // Event listeners for filters
+        document.getElementById('filtroStatusTarefa').addEventListener('change', renderTarefas);
+        document.getElementById('filtroResponsavelTarefa').addEventListener('change', renderTarefas);
+        document.getElementById('filtroCriadorTarefa').addEventListener('change', renderTarefas);
+        document.getElementById('filtroPrioridadeTarefa').addEventListener('change', renderTarefas);
+        
+        document.getElementById('filtroStatusConta').addEventListener('change', renderContas);
+        document.getElementById('filtroPessoaConta').addEventListener('change', renderContas);
+        document.getElementById('filtroStatusGarantia').addEventListener('change', renderGarantias);
+
+        // Initial render
+        updatePessoasSelect();
+        updateTarefasPessoasSelects();
+        renderDashboard();
+        renderCalendar();
+    </script>
+</body>
+</html>
