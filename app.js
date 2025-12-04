@@ -195,7 +195,7 @@ function getStatusClass(dias) {
 }
 
 function getRandomColor() {
-    const colors = ['#3498db', '#9b59b6', '#e74c3c', '#f39c12', '#27ae60', '#16a085', '#2c3e50', '#e67e22'];
+    const colors = ['#00d4aa', '#10b981', '#06b6d4', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6'];
     return colors[Math.floor(Math.random() * colors.length)];
 }
 

@@ -1,72 +1,399 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestão de Casa - Login</title>
+    <title>Gestão de Casa - Entrar</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 212, 170, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(255, 107, 107, 0.1) 0%, transparent 40%),
+                        radial-gradient(circle at 20% 80%, rgba(78, 205, 196, 0.1) 0%, transparent 40%);
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(5deg); }
+            66% { transform: translate(-20px, 20px) rotate(-5deg); }
+        }
+        
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .login-card {
+            border: none;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        
+        .card-body {
+            padding: 3rem !important;
+        }
+        
+        .brand-icon {
+            font-size: 4.5rem;
+            margin-bottom: 0.5rem;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+        }
+        
+        .brand-title {
+            font-weight: 700;
+            background: linear-gradient(135deg, #00d4aa 0%, #0f3460 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 2rem;
+        }
+        
+        .brand-subtitle {
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+        
+        .nav-pills {
+            background: #f1f5f9;
+            border-radius: 16px;
+            padding: 6px;
+        }
+        
+        .nav-pills .nav-link {
+            border-radius: 12px;
+            font-weight: 600;
+            padding: 0.85rem 1.5rem;
+            color: #475569;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .nav-pills .nav-link:hover {
+            background: rgba(0, 212, 170, 0.15);
+            color: #00d4aa;
+        }
+        
+        .nav-pills .nav-link.active {
+            background: linear-gradient(135deg, #00d4aa 0%, #00b894 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 212, 170, 0.4);
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-control {
+            border-radius: 12px;
+            padding: 1rem 1.2rem;
+            border: 2px solid #e2e8f0;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+        }
+        
+        .form-control:focus {
+            border-color: #00d4aa;
+            box-shadow: 0 0 0 4px rgba(0, 212, 170, 0.15);
+            background: #fff;
+        }
+        
+        .form-control::placeholder {
+            color: #94a3b8;
+        }
+        
+        .input-group-text {
+            border-radius: 12px 0 0 12px;
+            border: 2px solid #e2e8f0;
+            border-right: none;
+            background: linear-gradient(135deg, #00d4aa 0%, #00b894 100%);
+            color: white;
+            padding: 0 1rem;
+        }
+        
+        .input-group .form-control {
+            border-radius: 0 12px 12px 0;
+            border-left: none;
+        }
+        
+        .input-group:focus-within .input-group-text {
+            border-color: #00d4aa;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #00d4aa 0%, #00b894 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 1rem;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 212, 170, 0.4);
+            background: linear-gradient(135deg, #00e6b8 0%, #00cca3 100%);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+        
+        .alert {
+            border-radius: 12px;
+            font-size: 0.9rem;
+            border: none;
+        }
+        
+        .alert-danger {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            color: #dc2626;
+        }
+        
+        .alert-success {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #059669;
+        }
+        
+        .invalid-feedback {
+            font-size: 0.8rem;
+            color: #ef4444;
+        }
+        
+        .features {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 2px dashed #e2e8f0;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #475569;
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        
+        .feature-item:hover {
+            background: #f1f5f9;
+        }
+        
+        .feature-item i {
+            color: #00d4aa;
+            font-size: 1.1rem;
+        }
+        
+        .footer-text {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .footer-text:hover {
+            color: #00d4aa;
+        }
+        
+        @media (max-width: 576px) {
+            .card-body {
+                padding: 2rem !important;
+            }
+            
+            .brand-icon {
+                font-size: 3.5rem;
+            }
+            
+            .brand-title {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
 </head>
-<body class="bg-gradient" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh;">
+<body>
     <div class="container">
-        <div class="row justify-content-center align-items-center min-vh-100">
-            <div class="col-md-5 col-lg-4">
-                <div class="card shadow-lg">
-                    <div class="card-body p-5">
+        <div class="row justify-content-center">
+            <div class="col-11 col-sm-10 col-md-8 col-lg-5 col-xl-4">
+                <div class="card login-card">
+                    <div class="card-body">
+                        <!-- Cabeçalho -->
                         <div class="text-center mb-4">
-                            <h1 class="display-5 fw-bold">🏠 Gestão de Casa</h1>
-                            <p class="text-muted">Controle de contas, faturas e garantias</p>
+                            <div class="brand-icon">🏠</div>
+                            <h1 class="brand-title">Gestão de Casa</h1>
+                            <p class="brand-subtitle">Organize as suas contas, faturas e garantias</p>
                         </div>
                         
+                        <!-- Separadores -->
                         <ul class="nav nav-pills nav-fill mb-4" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="login-tab" data-bs-toggle="pill" data-bs-target="#login" type="button">Entrar</button>
+                                <button class="nav-link active" id="login-tab" data-bs-toggle="pill" 
+                                        data-bs-target="#login" type="button">
+                                    <i class="bi bi-box-arrow-in-right me-1"></i> Entrar
+                                </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="register-tab" data-bs-toggle="pill" data-bs-target="#register" type="button">Registar</button>
+                                <button class="nav-link" id="register-tab" data-bs-toggle="pill" 
+                                        data-bs-target="#register" type="button">
+                                    <i class="bi bi-person-plus me-1"></i> Registar
+                                </button>
                             </li>
                         </ul>
 
+                        <!-- Conteúdo dos Separadores -->
                         <div class="tab-content">
-                            <!-- Login Form -->
+                            <!-- Formulário de Entrada -->
                             <div class="tab-pane fade show active" id="login" role="tabpanel">
-                                <form id="loginForm">
+                                <form id="loginForm" class="needs-validation" novalidate>
                                     <div class="mb-3">
-                                        <label for="loginEmail" class="form-label">Email</label>
-                                        <input type="email" class="form-control" id="loginEmail" required placeholder="seu@email.com">
+                                        <label for="loginEmail" class="form-label">
+                                            <i class="bi bi-envelope me-1"></i> Correio eletrónico
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                            <input type="email" class="form-control" id="loginEmail" 
+                                                   required placeholder="exemplo@email.com">
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Por favor, introduza um correio eletrónico válido.
+                                        </div>
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="loginPassword" class="form-label">Palavra-passe</label>
-                                        <input type="password" class="form-control" id="loginPassword" required placeholder="••••••••">
+                                    <div class="mb-4">
+                                        <label for="loginPassword" class="form-label">
+                                            <i class="bi bi-lock me-1"></i> Palavra-passe
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                            <input type="password" class="form-control" id="loginPassword" 
+                                                   required minlength="6" placeholder="••••••••">
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            A palavra-passe é obrigatória.
+                                        </div>
                                     </div>
-                                    <button type="submit" class="btn btn-primary w-100 py-2">Entrar</button>
-                                    <p id="loginError" class="text-danger text-center mt-3 mb-0"></p>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="bi bi-box-arrow-in-right me-2"></i> Entrar na conta
+                                    </button>
+                                    <div id="loginError" class="alert alert-danger mt-3 d-none">
+                                        <i class="bi bi-exclamation-circle me-2"></i>
+                                        <span></span>
+                                    </div>
                                 </form>
                             </div>
 
-                            <!-- Register Form -->
+                            <!-- Formulário de Registo -->
                             <div class="tab-pane fade" id="register" role="tabpanel">
-                                <form id="registerForm">
+                                <form id="registerForm" class="needs-validation" novalidate>
                                     <div class="mb-3">
-                                        <label for="registerName" class="form-label">Nome</label>
-                                        <input type="text" class="form-control" id="registerName" required placeholder="O seu nome">
+                                        <label for="registerName" class="form-label">
+                                            <i class="bi bi-person me-1"></i> Nome completo
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                            <input type="text" class="form-control" id="registerName" 
+                                                   required minlength="3" placeholder="O seu nome">
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            O nome deve ter pelo menos 3 caracteres.
+                                        </div>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="registerEmail" class="form-label">Email</label>
-                                        <input type="email" class="form-control" id="registerEmail" required placeholder="seu@email.com">
+                                        <label for="registerEmail" class="form-label">
+                                            <i class="bi bi-envelope me-1"></i> Correio eletrónico
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                            <input type="email" class="form-control" id="registerEmail" 
+                                                   required placeholder="exemplo@email.com">
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Por favor, introduza um correio eletrónico válido.
+                                        </div>
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="registerPassword" class="form-label">Palavra-passe</label>
-                                        <input type="password" class="form-control" id="registerPassword" required placeholder="Mínimo 6 caracteres">
+                                    <div class="mb-4">
+                                        <label for="registerPassword" class="form-label">
+                                            <i class="bi bi-lock me-1"></i> Palavra-passe
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                            <input type="password" class="form-control" id="registerPassword" 
+                                                   required minlength="6" placeholder="Mínimo 6 caracteres">
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            A palavra-passe deve ter pelo menos 6 caracteres.
+                                        </div>
                                     </div>
-                                    <button type="submit" class="btn btn-primary w-100 py-2">Criar Conta</button>
-                                    <p id="registerError" class="text-danger text-center mt-3 mb-0"></p>
-                                    <p id="registerSuccess" class="text-success text-center mt-3 mb-0"></p>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="bi bi-person-plus me-2"></i> Criar conta
+                                    </button>
+                                    <div id="registerError" class="alert alert-danger mt-3 d-none">
+                                        <i class="bi bi-exclamation-circle me-2"></i>
+                                        <span></span>
+                                    </div>
+                                    <div id="registerSuccess" class="alert alert-success mt-3 d-none">
+                                        <i class="bi bi-check-circle me-2"></i>
+                                        <span></span>
+                                    </div>
                                 </form>
+                            </div>
+                        </div>
+                        
+                        <!-- Funcionalidades -->
+                        <div class="features">
+                            <div class="feature-item">
+                                <i class="bi bi-wallet2"></i>
+                                <span>Controlo de contas e despesas</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="bi bi-receipt"></i>
+                                <span>Gestão de faturas e garantias</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="bi bi-calendar-check"></i>
+                                <span>Calendário com lembretes</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="bi bi-people"></i>
+                                <span>Partilha com a família</span>
                             </div>
                         </div>
                     </div>
                 </div>
+                
+                <!-- Rodapé -->
+                <p class="text-center footer-text mt-4 small">
+                    © 2025 Gestão de Casa • Feito com ❤️ em Portugal 🇵🇹
+                </p>
             </div>
         </div>
     </div>
@@ -74,54 +401,85 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="app.js"></script>
     <script>
-        // Check if already logged in
+        // Verificar se já está autenticado
         if (Auth.isLoggedIn()) {
             window.location.href = 'dashboard.html';
         }
 
-        // Login
-        document.getElementById('loginForm').addEventListener('submit', (e) => {
+        // Validação do Bootstrap
+        const forms = document.querySelectorAll('.needs-validation');
+        
+        // Formulário de Entrada
+        const loginForm = document.getElementById('loginForm');
+        loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const email = document. getElementById('loginEmail'). value;
-            const password = document.getElementById('loginPassword').value;
+            e.stopPropagation();
             
-            if (Auth.login(email, password)) {
-                window. location.href = 'dashboard.html';
-            } else {
-                document.getElementById('loginError').textContent = 'Email ou palavra-passe incorretos';
+            if (loginForm.checkValidity()) {
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                
+                if (Auth.login(email, password)) {
+                    window.location.href = 'dashboard.html';
+                } else {
+                    const errorDiv = document.getElementById('loginError');
+                    errorDiv.querySelector('span').textContent = 'Correio eletrónico ou palavra-passe incorretos';
+                    errorDiv.classList.remove('d-none');
+                }
             }
+            
+            loginForm.classList.add('was-validated');
         });
 
-        // Register
-        document.getElementById('registerForm').addEventListener('submit', (e) => {
-            e. preventDefault();
-            const name = document.getElementById('registerName').value;
-            const email = document.getElementById('registerEmail').value;
-            const password = document.getElementById('registerPassword').value;
+        // Formulário de Registo
+        const registerForm = document.getElementById('registerForm');
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             
-            const result = Auth.register(name, email, password);
-            if (result. success) {
-                document.getElementById('registerSuccess').textContent = 'Conta criada!  Pode entrar agora.';
-                document.getElementById('registerError').textContent = '';
-                setTimeout(() => showTab('login'), 1500);
-            } else {
-                document. getElementById('registerError'). textContent = result. message;
-                document.getElementById('registerSuccess').textContent = '';
+            if (registerForm.checkValidity()) {
+                const name = document.getElementById('registerName').value;
+                const email = document.getElementById('registerEmail').value;
+                const password = document.getElementById('registerPassword').value;
+                
+                const result = Auth.register(name, email, password);
+                
+                if (result.success) {
+                    const successDiv = document.getElementById('registerSuccess');
+                    successDiv.querySelector('span').textContent = 'Conta criada com sucesso! Pode entrar agora.';
+                    successDiv.classList.remove('d-none');
+                    document.getElementById('registerError').classList.add('d-none');
+                    
+                    registerForm.reset();
+                    registerForm.classList.remove('was-validated');
+                    
+                    // Mudar para o separador de entrada
+                    setTimeout(() => {
+                        const loginTab = new bootstrap.Tab(document.getElementById('login-tab'));
+                        loginTab.show();
+                        successDiv.classList.add('d-none');
+                    }, 2000);
+                } else {
+                    const errorDiv = document.getElementById('registerError');
+                    errorDiv.querySelector('span').textContent = result.message;
+                    errorDiv.classList.remove('d-none');
+                    document.getElementById('registerSuccess').classList.add('d-none');
+                }
             }
+            
+            registerForm.classList.add('was-validated');
+        });
+
+        // Limpar validação ao mudar de separador
+        document.querySelectorAll('[data-bs-toggle="pill"]').forEach(tab => {
+            tab.addEventListener('shown.bs.tab', () => {
+                forms.forEach(form => {
+                    form.classList.remove('was-validated');
+                    form.reset();
+                });
+                document.querySelectorAll('.alert').forEach(alert => alert.classList.add('d-none'));
+            });
         });
     </script>
 </body>
-</html>            const result = Auth.register(name, email, password);
-            if (result.success) {
-                document.getElementById('registerSuccess').textContent = 'Conta criada! Pode entrar agora.';
-                document.getElementById('registerError').textContent = '';
-                setTimeout(() => {
-                    const loginTab = new bootstrap.Tab(document.getElementById('login-tab'));
-                    loginTab.show();
-                }, 1500);
-            } else {
-                document.getElementById('registerError').textContent = result.message;
-                document.getElementById('registerSuccess').textContent = '';
-            }
-        });
-    </script>
+</html>

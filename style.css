@@ -1,17 +1,35 @@
 /* Custom CSS complementar para Bootstrap */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+:root {
+    --primary: #00d4aa;
+    --primary-dark: #00b894;
+    --secondary: #64748b;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --info: #06b6d4;
+    --light: #f8fafc;
+    --dark: #1e293b;
+    --border: #e2e8f0;
+    --white: #ffffff;
+    --gray: #94a3b8;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
+body {
+    font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #e8f5f3 0%, #d4f1ea 100%);
+}
 
 /* Ajustes mínimos */
 .card {
     transition: transform 0.2s, box-shadow 0.2s;
+    border-radius: 16px;
+    border: none;
 }
 
 .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    box-shadow: 0 10px 30px rgba(0, 212, 170, 0.2) !important;
 }
 
 /* Forms */
@@ -59,7 +77,7 @@ body {
 .btn {
     padding: 12px 24px;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
@@ -67,13 +85,15 @@ body {
 }
 
 .btn-primary {
-    background: var(--primary);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     color: var(--white);
+    box-shadow: 0 4px 15px rgba(0, 212, 170, 0.3);
 }
 
 .btn-primary:hover {
-    background: var(--primary-dark);
+    background: linear-gradient(135deg, #00e6b8 0%, #00cca3 100%);
     transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 212, 170, 0.4);
 }
 
 .btn-secondary {
@@ -117,17 +137,17 @@ body {
 
 /* Header */
 .header {
-    background: var(--white);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     padding: 15px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: var(--shadow);
+    box-shadow: 0 4px 20px rgba(0, 212, 170, 0.3);
 }
 
 .header h1 {
     font-size: 24px;
-    color: var(--dark);
+    color: var(--white);
 }
 
 .header-right {
@@ -160,22 +180,25 @@ body {
     padding: 12px 24px;
     border: none;
     background: var(--white);
-    border-radius: 8px;
+    border-radius: 12px;
     cursor: pointer;
     font-size: 14px;
     font-weight: 600;
-    color: var(--dark);
+    color: var(--secondary);
     transition: all 0.3s;
     box-shadow: var(--shadow);
 }
 
 .nav-tab:hover {
     transform: translateY(-2px);
+    background: rgba(0, 212, 170, 0.1);
+    color: var(--primary);
 }
 
 .nav-tab.active {
-    background: var(--primary);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     color: var(--white);
+    box-shadow: 0 4px 15px rgba(0, 212, 170, 0.4);
 }
 
 /* Sections */
@@ -211,22 +234,26 @@ body {
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     color: var(--white);
     padding: 25px;
-    border-radius: 12px;
+    border-radius: 16px;
     display: flex;
     align-items: center;
     gap: 15px;
+    box-shadow: 0 8px 25px rgba(0, 212, 170, 0.3);
 }
 
 .stat-card.warning {
-    background: linear-gradient(135deg, var(--warning) 0%, #e67e22 100%);
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
 }
 
 .stat-card.danger {
-    background: linear-gradient(135deg, var(--danger) 0%, #c0392b 100%);
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
 }
 
 .stat-card.success {
-    background: linear-gradient(135deg, var(--success) 0%, #1e8449 100%);
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
 }
 
 .stat-icon {
@@ -373,7 +400,7 @@ body {
     font-size: 12px;
     font-weight: 600;
     color: var(--white);
-    background: var(--primary);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
 }
 
 /* Cards Grid */
@@ -612,27 +639,27 @@ body {
 }
 
 .calendar-event.tarefa {
-    background: #0d6efd;
+    background: linear-gradient(135deg, #00d4aa 0%, #00b894 100%);
     color: white;
 }
 
 .calendar-event.conta {
-    background: #0dcaf0;
+    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
     color: white;
 }
 
 .calendar-event.garantia {
-    background: #ffc107;
-    color: black;
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
 }
 
 .calendar-event.fatura {
-    background: #198754;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     color: white;
 }
 
 .calendar-event.feriado {
-    background: #dc3545;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
     color: white;
 }
 
