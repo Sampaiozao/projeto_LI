@@ -20,11 +20,52 @@ body {
     background: linear-gradient(135deg, #e8f5f3 0%, #d4f1ea 100%);
 }
 
-/* Ajustes mínimos */
+/* Navbar */
+.navbar {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    box-shadow: 0 4px 20px rgba(0, 212, 170, 0.3);
+}
+
+.navbar-brand {
+    color: var(--white) !important;
+    font-weight: 700;
+}
+
+.navbar .btn-outline-danger {
+    border-color: var(--white);
+    color: var(--white);
+}
+
+.navbar .btn-outline-danger:hover {
+    background: var(--white);
+    color: var(--primary);
+}
+
+/* Nav Pills */
+.nav-pills .nav-link {
+    color: var(--secondary);
+    font-weight: 600;
+    border-radius: 12px;
+    transition: all 0.3s;
+}
+
+.nav-pills .nav-link:hover {
+    background: rgba(0, 212, 170, 0.1);
+    color: var(--primary);
+}
+
+.nav-pills .nav-link.active {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%) !important;
+    color: var(--white) !important;
+    box-shadow: 0 4px 15px rgba(0, 212, 170, 0.4);
+}
+
+/* Cards */
 .card {
     transition: transform 0.2s, box-shadow 0.2s;
     border-radius: 16px;
     border: none;
+    box-shadow: var(--shadow);
 }
 
 .card:hover {
@@ -286,7 +327,12 @@ body {
 
 .card h3 {
     margin-bottom: 15px;
-    color: var(--dark);
+}
+
+/* Dashboard stat cards - ensure white text */
+.card.text-white h3,
+.card.text-white .card-title {
+    color: var(--white) !important;
 }
 
 .item-list {
@@ -401,6 +447,35 @@ body {
     font-weight: 600;
     color: var(--white);
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+}
+
+.badge.bg-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%) !important;
+}
+
+.badge.bg-success {
+    background: linear-gradient(135deg, var(--success) 0%, #059669 100%) !important;
+}
+
+.badge.bg-warning {
+    background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%) !important;
+}
+
+.badge.bg-danger {
+    background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%) !important;
+}
+
+/* Table Styling */
+.table thead {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: var(--white);
+}
+
+/* Form Focus States */
+.form-control:focus, 
+.form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(0, 212, 170, 0.25);
 }
 
 /* Cards Grid */
@@ -538,52 +613,23 @@ body {
     gap: 5px;
 }
 
-/* Modal */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    padding: 20px;
+/* Modal - Bootstrap overrides only */
+.modal-header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: var(--white);
+}
+
+.modal-header .btn-close {
+    filter: brightness(0) invert(1);
+}
+
+.modal-header .modal-title {
+    color: var(--white);
 }
 
 .modal-content {
-    background: var(--white);
     border-radius: 16px;
-    width: 100%;
-    max-width: 500px;
-    max-height: 90vh;
-    overflow-y: auto;
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    border-bottom: 1px solid var(--border);
-}
-
-.modal-header h3 {
-    color: var(--dark);
-}
-
-.close-btn {
-    background: transparent;
-    border: none;
-    font-size: 28px;
-    cursor: pointer;
-    color: var(--gray);
-}
-
-.close-btn:hover {
-    color: var(--danger);
+    overflow: hidden;
 }
 
 .modal-content form {

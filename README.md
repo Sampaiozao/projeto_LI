@@ -2,7 +2,7 @@
 Grupo 3
 
 
-“Gerir as tarefas domésticas e o orçamento da casa tem-se tornado cada vez mais complicado para mim. Preciso de um gestor doméstico que consiga centralizar os horários das tarefas, controlar as despesas (água, luz, gás, compras de supermercado, subscrições), lembrar cada membro da família das suas responsabilidades e optimizar as listas de compras com base no que já existe em casa. Deve adaptar-se às nossas rotinas semanais, integrar os calendários partilhados e alertar-nos antes de os pagamentos vencerem, para que a casa funcione de forma organizada sem ser preciso andar sempre a controlar tudo à mão.”
+“Gerir as tarefas domésticas e o orçamento da casa tem-se tornado cada vez mais complicado para mim. Preciso de um gestor doméstico que consiga controlar os horários das tarefas, controlar as despesas (água, luz, gás, compras de supermercado, subscrições), lembrar cada membro da família das suas responsabilidades e optimizar as listas de compras com base no que já existe em casa. Deve adaptar-se às nossas rotinas semanais, integrar os calendários partilhados e alertar-nos antes de os pagamentos vencerem, para que a casa funcione de forma organizada sem ser preciso andar sempre a controlar tudo à mão.”
 
 1. Definir o que a app vai fazer (funcionalidades base)
 Por exemplo:

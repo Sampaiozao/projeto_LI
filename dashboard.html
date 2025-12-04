@@ -7,124 +7,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * { font-family: 'Poppins', sans-serif; }
-        
-        body { background: linear-gradient(135deg, #e8f5f3 0%, #d4f1ea 100%) !important; }
-        
-        .navbar { 
-            background: linear-gradient(135deg, #00d4aa 0%, #00b894 100%) !important;
-            box-shadow: 0 4px 20px rgba(0, 212, 170, 0.3) !important;
-        }
-        
-        .navbar-brand, .navbar .text-dark { 
-            color: white !important;
-            font-weight: 700;
-        }
-        
-        .btn-outline-danger {
-            border-color: white !important;
-            color: white !important;
-        }
-        
-        .btn-outline-danger:hover {
-            background: white !important;
-            color: #00d4aa !important;
-        }
-        
-        .nav-pills .nav-link {
-            color: #475569;
-            font-weight: 600;
-            border-radius: 12px;
-            transition: all 0.3s;
-        }
-        
-        .nav-pills .nav-link:hover {
-            background: rgba(0, 212, 170, 0.1);
-            color: #00d4aa;
-        }
-        
-        .nav-pills .nav-link.active {
-            background: linear-gradient(135deg, #00d4aa 0%, #00b894 100%) !important;
-            color: white !important;
-            box-shadow: 0 4px 15px rgba(0, 212, 170, 0.4);
-        }
-        
-        .card {
-            border-radius: 16px !important;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
-            border: none !important;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #00d4aa 0%, #00b894 100%) !important;
-            border: none !important;
-            font-weight: 600;
-            border-radius: 10px;
-            padding: 0.6rem 1.2rem;
-        }
-        
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #00e6b8 0%, #00cca3 100%) !important;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 212, 170, 0.4) !important;
-        }
-        
-        .btn-success {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-            border: none !important;
-        }
-        
-        .btn-warning {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
-            border: none !important;
-        }
-        
-        .btn-danger {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
-            border: none !important;
-        }
-        
-        .badge.bg-primary {
-            background: linear-gradient(135deg, #00d4aa 0%, #00b894 100%) !important;
-        }
-        
-        .badge.bg-success {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-        }
-        
-        .badge.bg-warning {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
-        }
-        
-        .badge.bg-danger {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
-        }
-        
-        .table thead {
-            background: linear-gradient(135deg, #00d4aa 0%, #00b894 100%);
-            color: white;
-        }
-        
-        .form-control:focus, .form-select:focus {
-            border-color: #00d4aa !important;
-            box-shadow: 0 0 0 0.2rem rgba(0, 212, 170, 0.25) !important;
-        }
-        
-        .modal-header {
-            background: linear-gradient(135deg, #00d4aa 0%, #00b894 100%);
-            color: white;
-            border-radius: 0.5rem 0.5rem 0 0;
-        }
-        
-        .modal-header .btn-close {
-            filter: brightness(0) invert(1);
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <!-- Header -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-4">
+    <nav class="navbar navbar-expand-lg shadow-sm mb-4">
         <div class="container-fluid px-4">
             <span class="navbar-brand mb-0 h1">🏠 Gestão de Casa</span>
             <div class="d-flex align-items-center">
@@ -146,7 +33,7 @@
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="gestao-tab" data-bs-toggle="pill" data-bs-target="#gestaoSection" type="button">
+                <button class="nav-link" id="gestao-tab" data-bs-toggle="pill" data-bs-target="#gestaoSection" type="button" onclick="renderContas()">
                     <i class="bi bi-folder"></i> Gestão
                 </button>
             </li>
@@ -163,6 +50,11 @@
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="pessoas-tab" data-bs-toggle="pill" data-bs-target="#pessoasSection" type="button" onclick="renderPessoas()">
                     <i class="bi bi-people"></i> Pessoas
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="ranking-tab" data-bs-toggle="pill" data-bs-target="#rankingSection" type="button" onclick="renderRanking()">
+                    <i class="bi bi-trophy"></i> Ranking
                 </button>
             </li>
         </ul>
@@ -507,6 +399,81 @@
 
                 <div class="row g-3" id="pessoasGrid"></div>
             </div>
+
+            <!-- Ranking Section -->
+            <div class="tab-pane fade" id="rankingSection" role="tabpanel">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2><i class="bi bi-trophy text-warning"></i> Ranking de Pontos</h2>
+                </div>
+
+                <!-- Sistema de Pontos Info -->
+                <div class="alert alert-info d-flex align-items-center mb-4" role="alert">
+                    <i class="bi bi-info-circle-fill me-2 fs-4"></i>
+                    <div>
+                        <strong>Como ganhar pontos:</strong>
+                        <ul class="mb-0 mt-1">
+                            <li><i class="bi bi-check-circle text-success"></i> <strong>+10 pontos</strong> - Concluir uma tarefa</li>
+                            <li><i class="bi bi-wallet2 text-primary"></i> <strong>+15 pontos</strong> - Pagar conta no prazo</li>
+                            <li><i class="bi bi-clock-history text-warning"></i> <strong>+5 pontos</strong> - Pagar conta atrasada</li>
+                            <li><i class="bi bi-star-fill text-warning"></i> <strong>+5 pontos bónus</strong> - Tarefa de alta prioridade</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Ranking Cards -->
+                <div class="row g-4 mb-4">
+                    <!-- Top 3 Pódio -->
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header bg-gradient text-white" style="background: linear-gradient(135deg, #ffd700 0%, #ffb800 100%);">
+                                <h5 class="mb-0"><i class="bi bi-trophy-fill"></i> Pódio</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row justify-content-center align-items-end text-center" id="podioContainer">
+                                    <p class="text-muted">Carregando ranking...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ranking Table -->
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="bi bi-list-ol"></i> Classificação Completa</h5>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="text-center" style="width: 60px;">Pos.</th>
+                                    <th>Participante</th>
+                                    <th class="text-center">Tarefas</th>
+                                    <th class="text-center">Contas</th>
+                                    <th class="text-center">Pontos</th>
+                                    <th class="text-center">Nível</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rankingTableBody">
+                                <tr><td colspan="6" class="text-center text-muted py-4">Nenhum participante encontrado</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Histórico de Pontos -->
+                <div class="card mt-4">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="bi bi-clock-history"></i> Histórico Recente</h5>
+                        <span class="badge bg-secondary" id="totalHistorico">0 atividades</span>
+                    </div>
+                    <div class="card-body" style="max-height: 300px; overflow-y: auto;">
+                        <ul class="list-group list-group-flush" id="historicoList">
+                            <li class="list-group-item text-center text-muted">Nenhuma atividade registada</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -565,10 +532,12 @@
                     <textarea id="contaNotas" placeholder="Observações adicionais... "></textarea>
                 </div>
                 <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('contaModal')">Cancelar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Guardar</button>
                 </div>
             </form>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -590,7 +559,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>Valor (€)</label>
-                        <input type="number" id="faturaValor" step="0. 01" required placeholder="0.00">
+                        <input type="number" id="faturaValor" step="0.01" required placeholder="0.00">
                     </div>
                     <div class="form-group">
                         <label>Data da Compra</label>
@@ -643,21 +612,25 @@
                     <textarea id="faturaNotas" placeholder="Observações adicionais..."></textarea>
                 </div>
                 <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('faturaModal')">Cancelar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Guardar</button>
                 </div>
             </form>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Modal: Nova Garantia -->
-    <div id="garantiaModal" class="modal hidden">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="garantiaModalTitle">Nova Garantia</h3>
-                <button class="close-btn" onclick="closeModal('garantiaModal')">&times;</button>
-            </div>
-            <form id="garantiaForm">
+    <div class="modal fade" id="garantiaModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="garantiaModalTitle">Nova Garantia</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="garantiaForm">
                 <input type="hidden" id="garantiaId">
                 <div class="form-group">
                     <label>Produto</label>
@@ -696,10 +669,12 @@
                     <textarea id="garantiaNotas" placeholder="Observações, contactos de suporte..."></textarea>
                 </div>
                 <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('garantiaModal')">Cancelar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Guardar</button>
                 </div>
-            </form>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -847,6 +822,27 @@
             document.getElementById('garantiaSection').style.display = 'none';
         });
 
+        // Reset garantia modal on close
+        document.getElementById('garantiaModal').addEventListener('hidden.bs.modal', function() {
+            document.getElementById('garantiaForm').reset();
+            document.getElementById('garantiaId').value = '';
+            document.getElementById('garantiaModalTitle').textContent = 'Nova Garantia';
+        });
+
+        // Reset conta modal on close
+        document.getElementById('contaModal').addEventListener('hidden.bs.modal', function() {
+            document.getElementById('contaForm').reset();
+            document.getElementById('contaId').value = '';
+            document.getElementById('contaModalTitle').textContent = 'Nova Conta';
+        });
+
+        // Reset pessoa modal on close
+        document.getElementById('pessoaModal').addEventListener('hidden.bs.modal', function() {
+            document.getElementById('pessoaForm').reset();
+            document.getElementById('pessoaId').value = '';
+            document.getElementById('pessoaModalTitle').textContent = 'Nova Pessoa';
+        });
+
         // Set user name
         const user = Auth.getCurrentUser();
         document.getElementById('userName'). textContent = `Olá, ${user.name}! `;
@@ -881,13 +877,19 @@
             } else if (modalId === 'pessoaModal') {
                 new bootstrap.Modal(document.getElementById('pessoaModal')).show();
             } else if (modalId === 'garantiaModal') {
-                document.getElementById(modalId).classList.remove('hidden');
+                new bootstrap.Modal(document.getElementById('garantiaModal')).show();
+            } else if (modalId === 'faturaModal') {
+                new bootstrap.Modal(document.getElementById('faturaModal')).show();
             }
         }
 
         function closeModal(modalId) {
-            document.getElementById(modalId).classList.add('hidden');
-            document.getElementById(modalId).querySelector('form').reset();
+            const modalEl = document.getElementById(modalId);
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) {
+                modal.hide();
+            }
+            modalEl.querySelector('form').reset();
             // Clear hidden ID fields
             const idField = document.getElementById(modalId.replace('Modal', 'Id'));
             if (idField) idField.value = '';
@@ -1196,6 +1198,21 @@
                 tarefa.status = 'concluida';
                 tarefa.dataConclusao = new Date().toISOString();
                 DataStore.saveTarefa(tarefa);
+                
+                // Adicionar pontos ao responsável
+                if (tarefa.responsavel) {
+                    let pontosGanhos = 10; // Pontos base
+                    let descricao = `Concluiu tarefa: ${tarefa.titulo}`;
+                    
+                    // Bónus para tarefas de alta prioridade
+                    if (tarefa.prioridade === 'alta') {
+                        pontosGanhos += 5;
+                        descricao += ' (alta prioridade)';
+                    }
+                    
+                    adicionarPontos(tarefa.responsavel, pontosGanhos, 'tarefa', descricao);
+                }
+                
                 renderTarefas();
                 renderCalendar();
                 renderDashboard();
@@ -1277,17 +1294,61 @@
                 .sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento))
                 .slice(0, 5);
             
+            const pessoas = DataStore.getPessoas();
+            
             const proximasHtml = proximas.length > 0 
                 ? proximas.map(c => {
                     const venc = new Date(c.vencimento);
                     const diff = Math.ceil((venc - hoje) / (1000 * 60 * 60 * 24));
-                    const borderClass = diff < 0 ? 'border-danger' : diff <= 7 ? 'border-warning' : '';
-                    return `<li class="list-group-item d-flex justify-content-between align-items-center ${borderClass} border-start border-4">
-                        <span>${c.descricao}</span>
-                        <span class="badge bg-secondary">${c.valor.toFixed(2)}€ - ${formatDate(c.vencimento)}</span>
+                    const pessoa = pessoas.find(p => p.id === c.responsavel);
+                    
+                    let statusBadge, bgClass;
+                    if (diff < 0) {
+                        statusBadge = `<span class="badge bg-danger">Atrasada ${Math.abs(diff)} dias</span>`;
+                        bgClass = 'list-group-item-danger';
+                    } else if (diff === 0) {
+                        statusBadge = `<span class="badge bg-warning text-dark">Vence hoje!</span>`;
+                        bgClass = 'list-group-item-warning';
+                    } else if (diff <= 3) {
+                        statusBadge = `<span class="badge bg-warning text-dark">${diff} dias</span>`;
+                        bgClass = 'list-group-item-warning';
+                    } else if (diff <= 7) {
+                        statusBadge = `<span class="badge bg-info">${diff} dias</span>`;
+                        bgClass = '';
+                    } else {
+                        statusBadge = `<span class="badge bg-secondary">${diff} dias</span>`;
+                        bgClass = '';
+                    }
+                    
+                    // Ícones Bootstrap por categoria com cores
+                    const categoriaConfig = {
+                        'utilidades': { icon: 'bi-droplet-fill', color: 'text-info' },
+                        'internet': { icon: 'bi-wifi', color: 'text-primary' },
+                        'renda': { icon: 'bi-house-fill', color: 'text-success' },
+                        'seguros': { icon: 'bi-shield-fill', color: 'text-warning' },
+                        'outros': { icon: 'bi-file-text-fill', color: 'text-secondary' }
+                    }[c.categoria] || { icon: 'bi-file-text-fill', color: 'text-secondary' };
+                    
+                    return `<li class="list-group-item ${bgClass}">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="d-flex align-items-center">
+                                <i class="bi ${categoriaConfig.icon} ${categoriaConfig.color} fs-4 me-3"></i>
+                                <div>
+                                    <div class="fw-semibold">${c.descricao}</div>
+                                    <small class="text-muted">
+                                        <i class="bi bi-person"></i> ${pessoa ? pessoa.nome : 'N/A'} · 
+                                        <i class="bi bi-calendar"></i> ${formatDate(c.vencimento)}
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <div class="fw-bold text-primary">${c.valor.toFixed(2)}€</div>
+                                ${statusBadge}
+                            </div>
+                        </div>
                     </li>`;
                 }).join('')
-                : '<li class="list-group-item text-center text-muted">Nenhuma conta pendente 🎉</li>';
+                : '<li class="list-group-item text-center text-muted py-4"><i class="bi bi-check-circle fs-1 d-block mb-2 text-success"></i>Nenhuma conta pendente</li>';
             document.getElementById('proximasContas').innerHTML = proximasHtml;
 
             // Garantias a expirar
@@ -1303,17 +1364,22 @@
             const garantiasHtml = garantiasExpirando.length > 0
                 ? garantiasExpirando.map(g => {
                     const dias = Math.ceil((new Date(g.dataExpiracao) - hoje) / (1000 * 60 * 60 * 24));
-                    const borderClass = dias <= 30 ? 'border-warning border-start border-4' : '';
-                    return `<li class="list-group-item d-flex justify-content-between align-items-center ${borderClass}">
-                        <span>${g.produto}</span>
-                        <span class="badge bg-secondary">${dias} dias restantes</span>
+                    const bgClass = dias <= 30 ? 'list-group-item-warning' : '';
+                    const badgeClass = dias <= 30 ? 'bg-warning text-dark' : 'bg-secondary';
+                    return `<li class="list-group-item ${bgClass}">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="fw-semibold"><i class="bi bi-shield-check me-1"></i>${g.produto}</div>
+                                <small class="text-muted">${g.local || 'Local não especificado'}</small>
+                            </div>
+                            <span class="badge ${badgeClass}">${dias} dias</span>
+                        </div>
                     </li>`;
                 }).join('')
-                : '<li class="list-group-item text-center text-muted">Nenhuma garantia a expirar em breve ✓</li>';
+                : '<li class="list-group-item text-center text-muted py-4"><i class="bi bi-shield-check fs-1 d-block mb-2 text-success"></i>Nenhuma garantia a expirar em breve</li>';
             document.getElementById('garantiasExpirar').innerHTML = garantiasHtml;
 
-            // Tarefas pendentes (reutilizar variável tarefas já carregada)
-            const pessoas = DataStore.getPessoas();
+            // Tarefas pendentes
             const tarefasPendentes = tarefas
                 .filter(t => t.status !== 'concluida')
                 .sort((a, b) => new Date(a.prazo) - new Date(b.prazo))
@@ -1324,17 +1390,49 @@
                     const pessoa = pessoas.find(p => p.id === t.responsavel);
                     const prazoDate = new Date(t.prazo);
                     const diasRestantes = Math.ceil((prazoDate - hoje) / (1000 * 60 * 60 * 24));
-                    const borderClass = diasRestantes < 0 ? 'border-danger' : diasRestantes <= 3 ? 'border-warning' : '';
-                    const prioridadeIcon = t.prioridade === 'alta' ? '🔴' : t.prioridade === 'media' ? '🟡' : '🟢';
-                    return `<li class="list-group-item d-flex justify-content-between align-items-center ${borderClass} border-start border-4">
-                        <div>
-                            <div>${prioridadeIcon} ${t.titulo}</div>
-                            <small class="text-muted">${pessoa ? pessoa.nome : 'Sem responsável'}</small>
+                    
+                    let statusBadge, bgClass;
+                    if (diasRestantes < 0) {
+                        statusBadge = `<span class="badge bg-danger">Atrasada ${Math.abs(diasRestantes)}d</span>`;
+                        bgClass = 'list-group-item-danger';
+                    } else if (diasRestantes === 0) {
+                        statusBadge = `<span class="badge bg-warning text-dark">Hoje!</span>`;
+                        bgClass = 'list-group-item-warning';
+                    } else if (diasRestantes <= 3) {
+                        statusBadge = `<span class="badge bg-warning text-dark">${diasRestantes}d</span>`;
+                        bgClass = 'list-group-item-warning';
+                    } else {
+                        statusBadge = `<span class="badge bg-secondary">${diasRestantes}d</span>`;
+                        bgClass = '';
+                    }
+                    
+                    const prioridadeConfig = {
+                        'alta': { badge: 'bg-danger', text: 'Alta' },
+                        'media': { badge: 'bg-warning text-dark', text: 'Média' },
+                        'baixa': { badge: 'bg-success', text: 'Baixa' }
+                    }[t.prioridade] || { badge: 'bg-secondary', text: '' };
+                    
+                    const statusIcon = t.status === 'em_progresso' ? '<i class="bi bi-arrow-repeat text-info me-1"></i>' : '';
+                    
+                    return `<li class="list-group-item ${bgClass}">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="fw-semibold">${statusIcon}${t.titulo}</div>
+                                <div class="mt-1">
+                                    <span class="badge ${prioridadeConfig.badge} me-1">${prioridadeConfig.text}</span>
+                                    <small class="text-muted">
+                                        <i class="bi bi-person"></i> ${pessoa ? pessoa.nome : 'N/A'}
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <small class="text-muted d-block">${formatDate(t.prazo)}</small>
+                                ${statusBadge}
+                            </div>
                         </div>
-                        <span class="badge bg-secondary">${formatDate(t.prazo)}</span>
                     </li>`;
                 }).join('')
-                : '<li class="list-group-item text-center text-muted">Nenhuma tarefa pendente 🎉</li>';
+                : '<li class="list-group-item text-center text-muted py-4"><i class="bi bi-check-circle fs-1 d-block mb-2 text-success"></i>Nenhuma tarefa pendente</li>';
             document.getElementById('tarefasPendentes').innerHTML = tarefasHtml;
         }
 
@@ -1502,6 +1600,28 @@
                 conta. status = 'paga';
                 conta.dataPagamento = new Date(). toISOString();
                 DataStore. saveConta(conta);
+                
+                // Adicionar pontos ao responsável
+                if (conta.responsavel) {
+                    const hoje = new Date();
+                    const vencimento = new Date(conta.vencimento);
+                    hoje.setHours(0, 0, 0, 0);
+                    vencimento.setHours(0, 0, 0, 0);
+                    
+                    let pontosGanhos;
+                    let descricao;
+                    
+                    if (hoje <= vencimento) {
+                        pontosGanhos = 15; // Pago no prazo
+                        descricao = `Pagou conta no prazo: ${conta.descricao}`;
+                    } else {
+                        pontosGanhos = 5; // Pago atrasado
+                        descricao = `Pagou conta atrasada: ${conta.descricao}`;
+                    }
+                    
+                    adicionarPontos(conta.responsavel, pontosGanhos, 'conta', descricao);
+                }
+                
                 renderContas();
                 renderDashboard();
                 renderCalendar();
@@ -1873,6 +1993,190 @@
         document.getElementById('filtroStatusConta').addEventListener('change', renderContas);
         document.getElementById('filtroPessoaConta').addEventListener('change', renderContas);
         document.getElementById('filtroStatusGarantia').addEventListener('change', renderGarantias);
+
+        // ==========================================
+        // SISTEMA DE PONTOS E RANKING
+        // ==========================================
+
+        // Pontos por ação
+        const PONTOS = {
+            TAREFA_CONCLUIDA: 10,
+            TAREFA_ALTA_PRIORIDADE: 5,
+            CONTA_NO_PRAZO: 15,
+            CONTA_ATRASADA: 5
+        };
+
+        // Obter pontos do localStorage
+        function getPontos() {
+            return JSON.parse(localStorage.getItem('pontos') || '{}');
+        }
+
+        // Salvar pontos no localStorage
+        function savePontos(pontos) {
+            localStorage.setItem('pontos', JSON.stringify(pontos));
+        }
+
+        // Obter histórico de atividades
+        function getHistorico() {
+            return JSON.parse(localStorage.getItem('historicoPontos') || '[]');
+        }
+
+        // Salvar histórico
+        function saveHistorico(historico) {
+            localStorage.setItem('historicoPontos', JSON.stringify(historico));
+        }
+
+        // Adicionar pontos a uma pessoa
+        function adicionarPontos(pessoaId, quantidade, tipo, descricao) {
+            const pontos = getPontos();
+            if (!pontos[pessoaId]) {
+                pontos[pessoaId] = { total: 0, tarefas: 0, contas: 0 };
+            }
+            pontos[pessoaId].total += quantidade;
+            
+            if (tipo === 'tarefa') {
+                pontos[pessoaId].tarefas = (pontos[pessoaId].tarefas || 0) + 1;
+            } else if (tipo === 'conta') {
+                pontos[pessoaId].contas = (pontos[pessoaId].contas || 0) + 1;
+            }
+            
+            savePontos(pontos);
+            
+            // Adicionar ao histórico
+            const historico = getHistorico();
+            const pessoa = DataStore.getPessoas().find(p => p.id === pessoaId);
+            historico.unshift({
+                id: Date.now().toString(),
+                pessoaId: pessoaId,
+                pessoaNome: pessoa ? pessoa.nome : 'Desconhecido',
+                pontos: quantidade,
+                tipo: tipo,
+                descricao: descricao,
+                data: new Date().toISOString()
+            });
+            // Manter apenas os últimos 50 registos
+            if (historico.length > 50) historico.pop();
+            saveHistorico(historico);
+        }
+
+        // Obter nível baseado em pontos
+        function getNivel(pontos) {
+            if (pontos >= 500) return { nome: 'Mestre', cor: 'text-bg-danger', icone: 'bi-gem' };
+            if (pontos >= 300) return { nome: 'Expert', cor: 'text-bg-warning', icone: 'bi-star-fill' };
+            if (pontos >= 150) return { nome: 'Avançado', cor: 'text-bg-info', icone: 'bi-award' };
+            if (pontos >= 50) return { nome: 'Intermédio', cor: 'text-bg-primary', icone: 'bi-bookmark-star' };
+            return { nome: 'Iniciante', cor: 'text-bg-secondary', icone: 'bi-person' };
+        }
+
+        // Renderizar ranking
+        function renderRanking() {
+            const pessoas = DataStore.getPessoas();
+            const pontos = getPontos();
+            const historico = getHistorico();
+
+            // Calcular ranking
+            const ranking = pessoas.map(p => ({
+                ...p,
+                pontos: pontos[p.id]?.total || 0,
+                tarefas: pontos[p.id]?.tarefas || 0,
+                contas: pontos[p.id]?.contas || 0
+            })).sort((a, b) => b.pontos - a.pontos);
+
+            // Renderizar pódio (top 3)
+            const podioContainer = document.getElementById('podioContainer');
+            if (ranking.length === 0) {
+                podioContainer.innerHTML = '<p class="text-muted">Adicione pessoas para ver o ranking</p>';
+            } else {
+                let podioHtml = '';
+                // Ordem visual: 2º lugar | 1º lugar | 3º lugar (centro mais alto)
+                const posicoes = [
+                    { pos: 0, col: 'col-md-3', order: 2, height: '180px', bg: 'linear-gradient(135deg, #ffd700 0%, #ffb800 100%)', medalha: '🥇' },
+                    { pos: 1, col: 'col-md-3', order: 1, height: '140px', bg: 'linear-gradient(135deg, #c0c0c0 0%, #a8a8a8 100%)', medalha: '🥈' },
+                    { pos: 2, col: 'col-md-3', order: 3, height: '120px', bg: 'linear-gradient(135deg, #cd7f32 0%, #b87333 100%)', medalha: '🥉' }
+                ];
+
+                posicoes.forEach(config => {
+                    if (ranking[config.pos]) {
+                        const pessoa = ranking[config.pos];
+                        const nivel = getNivel(pessoa.pontos);
+                        podioHtml += `
+                            <div class="${config.col} order-${config.order}">
+                                <div class="card h-100" style="min-height: ${config.height};">
+                                    <div class="card-body d-flex flex-column justify-content-end align-items-center p-3">
+                                        <div class="display-4 mb-2">${config.medalha}</div>
+                                        <div class="rounded-circle d-flex align-items-center justify-content-center mb-2" 
+                                             style="width: 60px; height: 60px; background: ${pessoa.cor}; color: white; font-size: 1.5rem; font-weight: bold;">
+                                            ${pessoa.nome.charAt(0).toUpperCase()}
+                                        </div>
+                                        <h6 class="mb-1">${pessoa.nome}</h6>
+                                        <div class="h4 mb-1 text-primary">${pessoa.pontos} pts</div>
+                                        <span class="badge ${nivel.cor}"><i class="bi ${nivel.icone}"></i> ${nivel.nome}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                podioContainer.innerHTML = podioHtml;
+            }
+
+            // Renderizar tabela completa
+            const tableBody = document.getElementById('rankingTableBody');
+            if (ranking.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-4">Nenhum participante encontrado</td></tr>';
+            } else {
+                tableBody.innerHTML = ranking.map((pessoa, index) => {
+                    const nivel = getNivel(pessoa.pontos);
+                    const posicaoIcon = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}º`;
+                    return `
+                        <tr>
+                            <td class="text-center fw-bold fs-5">${posicaoIcon}</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center me-2" 
+                                         style="width: 40px; height: 40px; background: ${pessoa.cor}; color: white; font-weight: bold;">
+                                        ${pessoa.nome.charAt(0).toUpperCase()}
+                                    </div>
+                                    <span>${pessoa.nome}</span>
+                                </div>
+                            </td>
+                            <td class="text-center"><span class="badge bg-info">${pessoa.tarefas}</span></td>
+                            <td class="text-center"><span class="badge bg-success">${pessoa.contas}</span></td>
+                            <td class="text-center"><span class="fw-bold text-primary fs-5">${pessoa.pontos}</span></td>
+                            <td class="text-center"><span class="badge ${nivel.cor}"><i class="bi ${nivel.icone}"></i> ${nivel.nome}</span></td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+            // Renderizar histórico
+            const historicoList = document.getElementById('historicoList');
+            const totalHistorico = document.getElementById('totalHistorico');
+            totalHistorico.textContent = `${historico.length} atividades`;
+            
+            if (historico.length === 0) {
+                historicoList.innerHTML = '<li class="list-group-item text-center text-muted">Nenhuma atividade registada</li>';
+            } else {
+                historicoList.innerHTML = historico.map(h => {
+                    const icon = h.tipo === 'tarefa' ? 'bi-check-circle text-success' : 'bi-wallet2 text-primary';
+                    const dataFormatada = new Date(h.data).toLocaleDateString('pt-PT', { 
+                        day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' 
+                    });
+                    return `
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="bi ${icon} me-2"></i>
+                                <strong>${h.pessoaNome}</strong> - ${h.descricao}
+                            </div>
+                            <div class="text-end">
+                                <span class="badge bg-success">+${h.pontos} pts</span>
+                                <small class="text-muted d-block">${dataFormatada}</small>
+                            </div>
+                        </li>
+                    `;
+                }).join('');
+            }
+        }
 
         // Initial render
         updatePessoasSelect();
