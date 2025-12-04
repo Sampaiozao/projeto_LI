@@ -1859,17 +1859,30 @@
                         
                         cell.innerHTML = dayHtml;
                         
+                        // Adicionar ID à célula para referência
+                        cell.id = `day-${currentDate}`;
+                        
                         if (isToday) {
                             cell.style.backgroundColor = '#e7f3ff';
                             cell.style.border = '2px solid #0d6efd';
                         }
                         
-                        if (isFeriado) {
+                        // Destacar dia selecionado
+                        if (selectedDate === currentDate) {
+                            cell.style.backgroundColor = '#d4edda';
+                            cell.style.border = '2px solid #28a745';
+                        }
+                        
+                        if (isFeriado && selectedDate !== currentDate) {
                             cell.style.backgroundColor = '#ffe6e6';
                         }
                         
-                        // Click handler
-                        cell.onclick = () => showDayDetails(currentDate, date, monthNames[month], year);
+                        // Click handler - usar variáveis locais para evitar problema de closure
+                        const clickDate = currentDate;
+                        const clickDay = date;
+                        const clickMonthName = monthNames[month];
+                        const clickYear = year;
+                        cell.onclick = () => showDayDetails(clickDate, clickDay, clickMonthName, clickYear);
                         
                         date++;
                     }
@@ -1882,7 +1895,41 @@
         }
 
         function showDayDetails(dateStr, day, monthName, year) {
+            // Remover destaque do dia anteriormente selecionado
+            if (selectedDate) {
+                const prevCell = document.getElementById(`day-${selectedDate}`);
+                if (prevCell) {
+                    const prevDateParts = selectedDate.split('-');
+                    const prevYear = parseInt(prevDateParts[0]);
+                    const prevMonth = parseInt(prevDateParts[1]) - 1;
+                    const prevDay = parseInt(prevDateParts[2]);
+                    const prevIsToday = selectedDate === new Date().toISOString().split('T')[0];
+                    const prevFeriados = getFeriadosPortugal(prevYear);
+                    const prevIsFeriado = prevFeriados[selectedDate];
+                    
+                    if (prevIsToday) {
+                        prevCell.style.backgroundColor = '#e7f3ff';
+                        prevCell.style.border = '2px solid #0d6efd';
+                    } else if (prevIsFeriado) {
+                        prevCell.style.backgroundColor = '#ffe6e6';
+                        prevCell.style.border = '';
+                    } else {
+                        prevCell.style.backgroundColor = '';
+                        prevCell.style.border = '';
+                    }
+                }
+            }
+            
+            // Definir novo dia selecionado
             selectedDate = dateStr;
+            
+            // Destacar novo dia selecionado
+            const newCell = document.getElementById(`day-${dateStr}`);
+            if (newCell) {
+                newCell.style.backgroundColor = '#d4edda';
+                newCell.style.border = '2px solid #28a745';
+            }
+            
             const tarefas = DataStore.getTarefas();
             const contas = DataStore.getContas();
             const garantias = DataStore.getGarantias();
@@ -1890,7 +1937,7 @@
             const pessoas = DataStore.getPessoas();
             const feriados = getFeriadosPortugal(year);
             
-            let html = `<h6 class="mb-3">${day} de ${monthName} de ${year}</h6>`;
+            let html = `<h6 class="mb-3"><i class="bi bi-calendar-event text-primary me-2"></i>${day} de ${monthName} de ${year}</h6>`;
             
             const feriado = feriados[dateStr];
             if (feriado) {
