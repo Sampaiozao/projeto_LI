@@ -760,9 +760,13 @@
 
         // Modal functions
         function openModal(modalId) {
-            document. getElementById(modalId). classList.remove('hidden');
-            if (modalId === 'contaModal' || modalId === 'pessoaModal') {
+            if (modalId === 'contaModal') {
                 updatePessoasSelect();
+                new bootstrap.Modal(document.getElementById('contaModal')).show();
+            } else if (modalId === 'pessoaModal') {
+                new bootstrap.Modal(document.getElementById('pessoaModal')).show();
+            } else if (modalId === 'garantiaModal') {
+                document.getElementById(modalId).classList.remove('hidden');
             }
         }
 
@@ -770,7 +774,7 @@
             document.getElementById(modalId).classList.add('hidden');
             document.getElementById(modalId).querySelector('form').reset();
             // Clear hidden ID fields
-            const idField = document.getElementById(modalId. replace('Modal', 'Id'));
+            const idField = document.getElementById(modalId.replace('Modal', 'Id'));
             if (idField) idField.value = '';
         }
 
@@ -1393,16 +1397,16 @@
             const conta = DataStore.getContas().find(c => c.id === id);
             if (conta) {
                 document.getElementById('contaId').value = conta.id;
-                document.getElementById('contaDescricao'). value = conta.descricao;
+                document.getElementById('contaDescricao').value = conta.descricao;
                 document.getElementById('contaValor').value = conta.valor;
                 document.getElementById('contaVencimento').value = conta.vencimento;
-                document. getElementById('contaCategoria').value = conta.categoria;
-                document.getElementById('contaRecorrente').value = conta. recorrente;
+                document.getElementById('contaCategoria').value = conta.categoria;
+                document.getElementById('contaRecorrente').value = conta.recorrente;
                 document.getElementById('contaNotas').value = conta.notas || '';
                 updatePessoasSelect();
                 document.getElementById('contaResponsavel').value = conta.responsavel;
                 document.getElementById('contaModalTitle').textContent = 'Editar Conta';
-                openModal('contaModal');
+                new bootstrap.Modal(document.getElementById('contaModal')).show();
             }
         }
 
@@ -1492,23 +1496,24 @@
         }
 
         function editarPessoa(id) {
-            const pessoa = DataStore.getPessoas(). find(p => p.id === id);
+            const pessoa = DataStore.getPessoas().find(p => p.id === id);
             if (pessoa) {
                 document.getElementById('pessoaId').value = pessoa.id;
-                document.getElementById('pessoaNome'). value = pessoa.nome;
-                document. getElementById('pessoaEmail').value = pessoa.email || '';
-                document. getElementById('pessoaTelefone').value = pessoa.telefone || '';
+                document.getElementById('pessoaNome').value = pessoa.nome;
+                document.getElementById('pessoaEmail').value = pessoa.email || '';
+                document.getElementById('pessoaTelefone').value = pessoa.telefone || '';
                 document.getElementById('pessoaCor').value = pessoa.cor;
                 document.getElementById('pessoaModalTitle').textContent = 'Editar Pessoa';
-                openModal('pessoaModal');
+                new bootstrap.Modal(document.getElementById('pessoaModal')).show();
             }
         }
 
         function eliminarPessoa(id) {
-            if (confirm('Tem a certeza que deseja eliminar esta pessoa?  As contas associadas ficarão sem responsável. ')) {
+            if (confirm('Tem a certeza que deseja eliminar esta pessoa? As contas associadas ficarão sem responsável.')) {
                 DataStore.deletePessoa(id);
                 renderPessoas();
                 updatePessoasSelect();
+                renderDashboard();
             }
         }
 
