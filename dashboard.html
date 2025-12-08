@@ -804,95 +804,46 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="app.js"></script>
     <script>
-        // Check authentication
-        if (!Auth.isLoggedIn()) {
-            window.location.href = 'index.html';
-        }
+        // ==========================================
+        // AUTENTICAÇÃO E INICIALIZAÇÃO
+        // ==========================================
+        
+        // Verificar se usuário está autenticado
+        if (!Auth.isLoggedIn()) window.location.href = 'index.html';
 
-        // Initialize garantia section visibility on modal open
-        document.getElementById('faturaModal').addEventListener('show.bs.modal', function() {
-            setTimeout(() => toggleGarantia(), 50);
+        // ==========================================
+        // CONFIGURAÇÃO DE MODAIS
+        // ==========================================
+        const modalResetConfig = {
+            faturaModal: { form: 'faturaForm', id: 'faturaId', title: 'Nova Fatura', extra: () => document.getElementById('garantiaSection').style.display = 'none' },
+            garantiaModal: { form: 'garantiaForm', id: 'garantiaId', title: 'Nova Garantia' },
+            contaModal: { form: 'contaForm', id: 'contaId', title: 'Nova Conta' },
+            pessoaModal: { form: 'pessoaForm', id: 'pessoaId', title: 'Nova Pessoa' },
+            tarefaModal: { form: 'tarefaForm', id: 'tarefaId', title: 'Nova Tarefa', extra: () => {
+                document.getElementById('contaRelacionadaSection').style.display = 'none';
+                document.getElementById('tarefaStatus').value = 'pendente';
+            }}
+        };
+
+        Object.entries(modalResetConfig).forEach(([modalId, config]) => {
+            document.getElementById(modalId).addEventListener('hidden.bs.modal', () => {
+                document.getElementById(config.form).reset();
+                document.getElementById(config.id).value = '';
+                document.getElementById(modalId.replace('Modal', 'ModalTitle')).textContent = config.title;
+                if (config.extra) config.extra();
+            });
         });
 
-        // Reset form and hide garantia section on modal close
-        document.getElementById('faturaModal').addEventListener('hidden.bs.modal', function() {
-            document.getElementById('faturaForm').reset();
-            document.getElementById('faturaId').value = '';
-            document.getElementById('faturaModalTitle').textContent = 'Nova Fatura';
-            document.getElementById('garantiaSection').style.display = 'none';
-        });
+        // Inicializar garantia section ao abrir modal de fatura
+        document.getElementById('faturaModal').addEventListener('show.bs.modal', () => setTimeout(toggleGarantia, 50));
 
-        // Reset garantia modal on close
-        document.getElementById('garantiaModal').addEventListener('hidden.bs.modal', function() {
-            document.getElementById('garantiaForm').reset();
-            document.getElementById('garantiaId').value = '';
-            document.getElementById('garantiaModalTitle').textContent = 'Nova Garantia';
-        });
-
-        // Reset conta modal on close
-        document.getElementById('contaModal').addEventListener('hidden.bs.modal', function() {
-            document.getElementById('contaForm').reset();
-            document.getElementById('contaId').value = '';
-            document.getElementById('contaModalTitle').textContent = 'Nova Conta';
-        });
-
-        // Reset pessoa modal on close
-        document.getElementById('pessoaModal').addEventListener('hidden.bs.modal', function() {
-            document.getElementById('pessoaForm').reset();
-            document.getElementById('pessoaId').value = '';
-            document.getElementById('pessoaModalTitle').textContent = 'Nova Pessoa';
-        });
-
-        // Set user name
+        // Inicialização e autenticação
         const user = Auth.getCurrentUser();
-        document.getElementById('userName'). textContent = `Olá, ${user.name}! `;
+        document.getElementById('userName').textContent = `Olá, ${user.name}!`;
 
-        // Logout
         function logout() {
             Auth.logout();
-            window.location. href = 'index.html';
-        }
-
-        // Section navigation
-        function showSection(section) {
-            document.querySelectorAll('.nav-tab'). forEach(tab => tab.classList. remove('active'));
-            document.querySelectorAll('.section'). forEach(sec => sec.classList. add('hidden'));
-            
-            document.querySelector(`[onclick="showSection('${section}')"]`). classList.add('active');
-            document.getElementById(`${section}Section`).classList.remove('hidden');
-            
-            // Refresh data
-            if (section === 'dashboard') renderDashboard();
-            if (section === 'contas') renderContas();
-            if (section === 'faturas') renderFaturas();
-            if (section === 'garantias') renderGarantias();
-            if (section === 'pessoas') renderPessoas();
-        }
-
-        // Modal functions
-        function openModal(modalId) {
-            if (modalId === 'contaModal') {
-                updatePessoasSelect();
-                new bootstrap.Modal(document.getElementById('contaModal')).show();
-            } else if (modalId === 'pessoaModal') {
-                new bootstrap.Modal(document.getElementById('pessoaModal')).show();
-            } else if (modalId === 'garantiaModal') {
-                new bootstrap.Modal(document.getElementById('garantiaModal')).show();
-            } else if (modalId === 'faturaModal') {
-                new bootstrap.Modal(document.getElementById('faturaModal')).show();
-            }
-        }
-
-        function closeModal(modalId) {
-            const modalEl = document.getElementById(modalId);
-            const modal = bootstrap.Modal.getInstance(modalEl);
-            if (modal) {
-                modal.hide();
-            }
-            modalEl.querySelector('form').reset();
-            // Clear hidden ID fields
-            const idField = document.getElementById(modalId.replace('Modal', 'Id'));
-            if (idField) idField.value = '';
+            window.location.href = 'index.html';
         }
 
         // Update pessoas dropdown
@@ -910,18 +861,28 @@
             });
         }
 
-        // Form submissions
-        document.getElementById('contaForm'). addEventListener('submit', (e) => {
+        // ==========================================
+        // SUBMISSÕES DE FORMULÁRIOS
+        // ==========================================
+        
+        // Helper para obter valor de campo
+        const getFieldValue = (id, parser = val => val) => {
+            const el = document.getElementById(id);
+            return el ? parser(el.value) : null;
+        };
+        
+        // Formulário de Contas
+        document.getElementById('contaForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const conta = {
-                id: document.getElementById('contaId').value || Date.now(). toString(),
-                descricao: document. getElementById('contaDescricao').value,
-                valor: parseFloat(document.getElementById('contaValor').value),
-                vencimento: document. getElementById('contaVencimento').value,
-                responsavel: document.getElementById('contaResponsavel').value,
-                categoria: document. getElementById('contaCategoria').value,
-                recorrente: document.getElementById('contaRecorrente'). value,
-                notas: document.getElementById('contaNotas').value,
+                id: getFieldValue('contaId') || Date.now().toString(),
+                descricao: getFieldValue('contaDescricao'),
+                valor: getFieldValue('contaValor', parseFloat),
+                vencimento: getFieldValue('contaVencimento'),
+                responsavel: getFieldValue('contaResponsavel'),
+                categoria: getFieldValue('contaCategoria'),
+                recorrente: getFieldValue('contaRecorrente'),
+                notas: getFieldValue('contaNotas'),
                 status: 'pendente',
                 createdAt: new Date().toISOString()
             };
@@ -952,56 +913,52 @@
             document.getElementById('garantiaDuracaoSection').style.display = this.checked ? 'block' : 'none';
         });
 
+        // Formulário de Faturas
         document.getElementById('faturaForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            const faturaId = document.getElementById('faturaId').value || Date.now().toString();
-            const categoria = document.getElementById('faturaCategoria').value;
+            const faturaId = getFieldValue('faturaId') || Date.now().toString();
+            const categoria = getFieldValue('faturaCategoria');
             const comGarantia = document.getElementById('faturaComGarantia').checked;
-            const isEditing = document.getElementById('faturaId').value !== '';
+            const isEditing = !!getFieldValue('faturaId');
             
             const fatura = {
                 id: faturaId,
-                descricao: document.getElementById('faturaDescricao').value,
-                valor: parseFloat(document.getElementById('faturaValor').value),
-                data: document.getElementById('faturaData').value,
-                local: document.getElementById('faturaLocal').value,
-                categoria: categoria,
-                numero: document.getElementById('faturaNumero').value,
-                notas: document.getElementById('faturaNotas').value,
-                serial: document.getElementById('faturaSerial').value,
-                comGarantia: comGarantia,
+                descricao: getFieldValue('faturaDescricao'),
+                valor: getFieldValue('faturaValor', parseFloat),
+                data: getFieldValue('faturaData'),
+                local: getFieldValue('faturaLocal'),
+                categoria,
+                numero: getFieldValue('faturaNumero'),
+                notas: getFieldValue('faturaNotas'),
+                serial: getFieldValue('faturaSerial'),
+                comGarantia,
                 createdAt: new Date().toISOString()
             };
             DataStore.saveFatura(fatura);
             
-            // Criar ou atualizar garantia automaticamente se aplicável
+            // Criar/atualizar garantia automaticamente se aplicável
             if (comGarantia && (categoria === 'eletronicos' || categoria === 'eletrodomesticos')) {
-                const duracao = parseInt(document.getElementById('faturaGarantiaDuracao').value);
-                const dataCompra = document.getElementById('faturaData').value;
+                const duracao = getFieldValue('faturaGarantiaDuracao', parseInt);
+                const dataCompra = getFieldValue('faturaData');
                 const dataExpiracao = new Date(dataCompra);
                 dataExpiracao.setMonth(dataExpiracao.getMonth() + duracao);
                 
-                const garantia = {
+                DataStore.saveGarantia({
                     id: 'gar_' + faturaId,
-                    faturaId: faturaId,
+                    faturaId,
                     produto: fatura.descricao,
-                    dataCompra: dataCompra,
-                    duracao: duracao,
+                    dataCompra,
+                    duracao,
                     dataExpiracao: dataExpiracao.toISOString().split('T')[0],
                     local: fatura.local,
                     valor: fatura.valor,
                     serial: fatura.serial || '',
                     notas: 'Garantia criada automaticamente a partir da fatura' + (fatura.numero ? ' ' + fatura.numero : ''),
                     createdAt: new Date().toISOString()
-                };
-                DataStore.saveGarantia(garantia);
+                });
             } else if (isEditing) {
-                // Se estiver editando e desmarcar garantia, remover garantia existente
-                const garantias = DataStore.getGarantias();
-                const garantiaExistente = garantias.find(g => g.faturaId === faturaId);
-                if (garantiaExistente) {
-                    DataStore.deleteGarantia(garantiaExistente.id);
-                }
+                const garantiaExistente = DataStore.getGarantias().find(g => g.faturaId === faturaId);
+                if (garantiaExistente) DataStore.deleteGarantia(garantiaExistente.id);
             }
             
             bootstrap.Modal.getInstance(document.getElementById('faturaModal')).hide();
@@ -1011,65 +968,64 @@
             renderCalendar();
         });
 
-        document.getElementById('garantiaForm'). addEventListener('submit', (e) => {
+        // Formulário de Garantias
+        document.getElementById('garantiaForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            const dataCompra = document. getElementById('garantiaDataCompra').value;
-            const duracao = parseInt(document.getElementById('garantiaDuracao').value);
+            const dataCompra = getFieldValue('garantiaDataCompra');
+            const duracao = getFieldValue('garantiaDuracao', parseInt);
             const dataExpiracao = new Date(dataCompra);
             dataExpiracao.setMonth(dataExpiracao.getMonth() + duracao);
 
-            const garantia = {
-                id: document.getElementById('garantiaId'). value || Date.now().toString(),
-                produto: document.getElementById('garantiaProduto').value,
-                dataCompra: dataCompra,
-                duracao: duracao,
-                dataExpiracao: dataExpiracao.toISOString(). split('T')[0],
-                local: document.getElementById('garantiaLocal').value,
-                valor: parseFloat(document.getElementById('garantiaValor').value) || 0,
-                serial: document.getElementById('garantiaSerial'). value,
-                notas: document.getElementById('garantiaNotas').value,
+            DataStore.saveGarantia({
+                id: getFieldValue('garantiaId') || Date.now().toString(),
+                produto: getFieldValue('garantiaProduto'),
+                dataCompra,
+                duracao,
+                dataExpiracao: dataExpiracao.toISOString().split('T')[0],
+                local: getFieldValue('garantiaLocal'),
+                valor: getFieldValue('garantiaValor', v => parseFloat(v) || 0),
+                serial: getFieldValue('garantiaSerial'),
+                notas: getFieldValue('garantiaNotas'),
                 createdAt: new Date().toISOString()
-            };
-            DataStore.saveGarantia(garantia);
+            });
             closeModal('garantiaModal');
             renderGarantias();
             renderDashboard();
         });
 
+        // Formulário de Pessoas
         document.getElementById('pessoaForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            const pessoa = {
-                id: document.getElementById('pessoaId'). value || Date.now().toString(),
-                nome: document.getElementById('pessoaNome').value,
-                email: document.getElementById('pessoaEmail').value,
-                telefone: document. getElementById('pessoaTelefone').value,
-                cor: document.getElementById('pessoaCor').value,
-                createdAt: new Date(). toISOString()
-            };
-            DataStore.savePessoa(pessoa);
+            DataStore.savePessoa({
+                id: getFieldValue('pessoaId') || Date.now().toString(),
+                nome: getFieldValue('pessoaNome'),
+                email: getFieldValue('pessoaEmail'),
+                telefone: getFieldValue('pessoaTelefone'),
+                cor: getFieldValue('pessoaCor'),
+                createdAt: new Date().toISOString()
+            });
             closeModal('pessoaModal');
             renderPessoas();
             updatePessoasSelect();
             updateTarefasPessoasSelects();
         });
 
-        // Tarefa Form Submission
+        // Formulário de Tarefas
         document.getElementById('tarefaForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            const tarefa = {
-                id: document.getElementById('tarefaId').value || Date.now().toString(),
-                titulo: document.getElementById('tarefaTitulo').value,
-                descricao: document.getElementById('tarefaDescricao').value,
-                responsavel: document.getElementById('tarefaResponsavel').value,
+            DataStore.saveTarefa({
+                id: getFieldValue('tarefaId') || Date.now().toString(),
+                titulo: getFieldValue('tarefaTitulo'),
+                descricao: getFieldValue('tarefaDescricao'),
+                responsavel: getFieldValue('tarefaResponsavel'),
                 criador: user.id,
                 criadorNome: user.name,
-                prazo: document.getElementById('tarefaPrazo').value,
-                prioridade: document.getElementById('tarefaPrioridade').value,
-                status: document.getElementById('tarefaStatus').value,
-                contaId: document.getElementById('tarefaTemConta').checked ? document.getElementById('tarefaContaId').value : null,
+                prazo: getFieldValue('tarefaPrazo'),
+                prioridade: getFieldValue('tarefaPrioridade'),
+                status: getFieldValue('tarefaStatus'),
+                contaId: document.getElementById('tarefaTemConta').checked ? getFieldValue('tarefaContaId') : null,
                 createdAt: new Date().toISOString()
-            };
-            DataStore.saveTarefa(tarefa);
+            });
             bootstrap.Modal.getInstance(document.getElementById('tarefaModal')).hide();
             renderTarefas();
             renderCalendar();
@@ -1191,80 +1147,72 @@
         }
 
         // Concluir Tarefa
+        // ==========================================
+        // OPERAÇÕES DE TAREFAS
+        // ==========================================
+        
         function concluirTarefa(id) {
-            const tarefas = DataStore.getTarefas();
-            const tarefa = tarefas.find(t => t.id === id);
-            if (tarefa) {
-                tarefa.status = 'concluida';
-                tarefa.dataConclusao = new Date().toISOString();
-                DataStore.saveTarefa(tarefa);
-                
-                // Adicionar pontos ao responsável
-                if (tarefa.responsavel) {
-                    let pontosGanhos = 10; // Pontos base
-                    let descricao = `Concluiu tarefa: ${tarefa.titulo}`;
-                    
-                    // Bónus para tarefas de alta prioridade
-                    if (tarefa.prioridade === 'alta') {
-                        pontosGanhos += 5;
-                        descricao += ' (alta prioridade)';
-                    }
-                    
-                    adicionarPontos(tarefa.responsavel, pontosGanhos, 'tarefa', descricao);
-                }
-                
-                renderTarefas();
-                renderCalendar();
-                renderDashboard();
+            const tarefa = DataStore.getTarefas().find(t => t.id === id);
+            if (!tarefa) return;
+            
+            tarefa.status = 'concluida';
+            tarefa.dataConclusao = new Date().toISOString();
+            DataStore.saveTarefa(tarefa);
+            
+            // Adicionar pontos ao responsável
+            if (tarefa.responsavel) {
+                const pontosGanhos = 10 + (tarefa.prioridade === 'alta' ? 5 : 0);
+                const bonus = tarefa.prioridade === 'alta' ? ' (alta prioridade)' : '';
+                adicionarPontos(tarefa.responsavel, pontosGanhos, 'tarefa', `Concluiu tarefa: ${tarefa.titulo}${bonus}`);
             }
+            
+            renderTarefas();
+            renderCalendar();
+            renderDashboard();
         }
 
-        // Editar Tarefa
         function editarTarefa(id) {
             const tarefa = DataStore.getTarefas().find(t => t.id === id);
-            if (tarefa) {
-                document.getElementById('tarefaId').value = tarefa.id;
-                document.getElementById('tarefaTitulo').value = tarefa.titulo;
-                document.getElementById('tarefaDescricao').value = tarefa.descricao || '';
-                document.getElementById('tarefaResponsavel').value = tarefa.responsavel;
-                document.getElementById('tarefaPrazo').value = tarefa.prazo;
-                document.getElementById('tarefaPrioridade').value = tarefa.prioridade;
-                document.getElementById('tarefaStatus').value = tarefa.status;
-                
-                if (tarefa.contaId) {
-                    document.getElementById('tarefaTemConta').checked = true;
-                    toggleContaRelacionada();
-                    document.getElementById('tarefaContaId').value = tarefa.contaId;
-                }
-                
-                document.getElementById('tarefaModalTitle').textContent = 'Editar Tarefa';
-                new bootstrap.Modal(document.getElementById('tarefaModal')).show();
+            if (!tarefa) return;
+            
+            populateForm('tarefa', tarefa);
+            
+            if (tarefa.contaId) {
+                document.getElementById('tarefaTemConta').checked = true;
+                toggleContaRelacionada();
+                document.getElementById('tarefaContaId').value = tarefa.contaId;
             }
+            
+            document.getElementById('tarefaModalTitle').textContent = 'Editar Tarefa';
+            new bootstrap.Modal(document.getElementById('tarefaModal')).show();
         }
 
-        // Eliminar Tarefa
         function eliminarTarefa(id) {
-            if (confirm('Tem a certeza que deseja eliminar esta tarefa?')) {
-                DataStore.deleteTarefa(id);
-                renderTarefas();
-                renderCalendar();
-                renderDashboard();
-            }
+            if (!confirm('Tem a certeza que deseja eliminar esta tarefa?')) return;
+            DataStore.deleteTarefa(id);
+            renderTarefas();
+            renderCalendar();
+            renderDashboard();
         }
 
-        // Reset tarefa modal on close
-        document.getElementById('tarefaModal').addEventListener('hidden.bs.modal', function() {
-            document.getElementById('tarefaForm').reset();
-            document.getElementById('tarefaId').value = '';
-            document.getElementById('tarefaModalTitle').textContent = 'Nova Tarefa';
-            document.getElementById('contaRelacionadaSection').style.display = 'none';
-            document.getElementById('tarefaStatus').value = 'pendente';
-        });
 
-        // Render functions
+
+        // ==========================================
+        // FUNÇÕES DE RENDERIZAÇÃO
+        // ==========================================
+        
+        // Helper para criar botões de ação
+        const createActionButtons = (actions) => {
+            return `<div class="btn-group btn-group-sm">${actions.map(a => 
+                `<button class="btn btn-${a.variant} btn-sm" onclick="${a.onclick}" title="${a.title}">
+                    <i class="bi bi-${a.icon}"></i>
+                </button>`
+            ).join('')}</div>`;
+        };
+        
         function renderDashboard() {
-            const contas = DataStore. getContas();
-            const garantias = DataStore. getGarantias();
+            const contas = DataStore.getContas();
+            const garantias = DataStore.getGarantias();
             const hoje = new Date();
             hoje.setHours(0, 0, 0, 0);
 
@@ -1493,6 +1441,11 @@
                 ? faturas.map(f => {
                     const garantias = DataStore.getGarantias();
                     const temGarantia = garantias.some(g => g.faturaId === f.id);
+                    const actions = [
+                        ...(temGarantia ? [{ variant: 'success', onclick: `verGarantia('${f.id}')`, title: 'Ver Garantia', icon: 'shield-check' }] : []),
+                        { variant: 'primary', onclick: `editarFatura('${f.id}')`, title: 'Editar', icon: 'pencil' },
+                        { variant: 'danger', onclick: `eliminarFatura('${f.id}')`, title: 'Eliminar', icon: 'trash' }
+                    ];
                     return `<tr>
                         <td>
                             ${f.descricao}
@@ -1502,13 +1455,7 @@
                         <td>${formatDate(f.data)}</td>
                         <td>${f.local || '-'}</td>
                         <td><span class="badge bg-primary">${f.categoria}</span></td>
-                        <td>
-                            <div class="btn-group btn-group-sm">
-                                ${temGarantia ? `<button class="btn btn-success btn-sm" onclick="verGarantia('${f.id}')" title="Ver Garantia"><i class="bi bi-shield-check"></i></button>` : ''}
-                                <button class="btn btn-primary btn-sm" onclick="editarFatura('${f.id}')" title="Editar"><i class="bi bi-pencil"></i></button>
-                                <button class="btn btn-danger btn-sm" onclick="eliminarFatura('${f.id}')" title="Eliminar"><i class="bi bi-trash"></i></button>
-                            </div>
-                        </td>
+                        <td>${createActionButtons(actions)}</td>
                     </tr>`;
                 }).join('')
                 : '<tr><td colspan="6" class="text-center text-muted py-4">Nenhuma fatura registada</td></tr>';
@@ -1592,164 +1539,129 @@
                 : '<p class="empty">Nenhuma pessoa registada.  Adicione pessoas para atribuir contas. </p>';
         }
 
-        // Action functions
+        // OPERAÇÕES DE CONTAS
+        
         function marcarPaga(id) {
-            const contas = DataStore. getContas();
-            const conta = contas.find(c => c. id === id);
-            if (conta) {
-                conta. status = 'paga';
-                conta.dataPagamento = new Date(). toISOString();
-                DataStore. saveConta(conta);
+            const conta = DataStore.getContas().find(c => c.id === id);
+            if (!conta) return;
+            
+            conta.status = 'paga';
+            conta.dataPagamento = new Date().toISOString();
+            DataStore.saveConta(conta);
+            
+            // Adicionar pontos ao responsável
+            if (conta.responsavel) {
+                const hoje = new Date().setHours(0, 0, 0, 0);
+                const vencimento = new Date(conta.vencimento).setHours(0, 0, 0, 0);
+                const noPrazo = hoje <= vencimento;
                 
-                // Adicionar pontos ao responsável
-                if (conta.responsavel) {
-                    const hoje = new Date();
-                    const vencimento = new Date(conta.vencimento);
-                    hoje.setHours(0, 0, 0, 0);
-                    vencimento.setHours(0, 0, 0, 0);
-                    
-                    let pontosGanhos;
-                    let descricao;
-                    
-                    if (hoje <= vencimento) {
-                        pontosGanhos = 15; // Pago no prazo
-                        descricao = `Pagou conta no prazo: ${conta.descricao}`;
-                    } else {
-                        pontosGanhos = 5; // Pago atrasado
-                        descricao = `Pagou conta atrasada: ${conta.descricao}`;
-                    }
-                    
-                    adicionarPontos(conta.responsavel, pontosGanhos, 'conta', descricao);
-                }
-                
-                renderContas();
-                renderDashboard();
-                renderCalendar();
+                adicionarPontos(
+                    conta.responsavel,
+                    noPrazo ? 15 : 5,
+                    'conta',
+                    `Pagou conta ${noPrazo ? 'no prazo' : 'atrasada'}: ${conta.descricao}`
+                );
             }
+            
+            renderContas();
+            renderDashboard();
+            renderCalendar();
         }
 
+        // Helper para preencher formulário de edição
+        const populateForm = (prefix, data) => {
+            Object.entries(data).forEach(([key, value]) => {
+                const el = document.getElementById(prefix + key.charAt(0).toUpperCase() + key.slice(1));
+                if (el) el.value = value || '';
+            });
+        };
+        
         function editarConta(id) {
             const conta = DataStore.getContas().find(c => c.id === id);
-            if (conta) {
-                document.getElementById('contaId').value = conta.id;
-                document.getElementById('contaDescricao').value = conta.descricao;
-                document.getElementById('contaValor').value = conta.valor;
-                document.getElementById('contaVencimento').value = conta.vencimento;
-                document.getElementById('contaCategoria').value = conta.categoria;
-                document.getElementById('contaRecorrente').value = conta.recorrente;
-                document.getElementById('contaNotas').value = conta.notas || '';
-                updatePessoasSelect();
-                document.getElementById('contaResponsavel').value = conta.responsavel;
-                document.getElementById('contaModalTitle').textContent = 'Editar Conta';
-                new bootstrap.Modal(document.getElementById('contaModal')).show();
-            }
+            if (!conta) return;
+            
+            populateForm('conta', conta);
+            updatePessoasSelect();
+            document.getElementById('contaResponsavel').value = conta.responsavel;
+            document.getElementById('contaModalTitle').textContent = 'Editar Conta';
+            new bootstrap.Modal(document.getElementById('contaModal')).show();
         }
 
         function eliminarConta(id) {
-            if (confirm('Tem a certeza que deseja eliminar esta conta?')) {
-                DataStore.deleteConta(id);
-                renderContas();
-                renderDashboard();
-                renderCalendar();
-            }
+            if (!confirm('Tem a certeza que deseja eliminar esta conta?')) return;
+            DataStore.deleteConta(id);
+            renderContas();
+            renderDashboard();
+            renderCalendar();
         }
+        // OPERAÇÕES DE FATURAS
 
         function editarFatura(id) {
             const fatura = DataStore.getFaturas().find(f => f.id === id);
-            if (fatura) {
-                document.getElementById('faturaId').value = fatura.id;
-                document.getElementById('faturaDescricao').value = fatura.descricao;
-                document.getElementById('faturaValor').value = fatura.valor;
-                document.getElementById('faturaData').value = fatura.data;
-                document.getElementById('faturaLocal').value = fatura.local || '';
-                document.getElementById('faturaCategoria').value = fatura.categoria;
-                document.getElementById('faturaNumero').value = fatura.numero || '';
-                document.getElementById('faturaNotas').value = fatura.notas || '';
-                document.getElementById('faturaSerial').value = fatura.serial || '';
-                document.getElementById('faturaComGarantia').checked = fatura.comGarantia || false;
-                
-                // Preencher duração da garantia se existir
-                const garantias = DataStore.getGarantias();
-                const garantia = garantias.find(g => g.faturaId === id);
-                if (garantia) {
-                    document.getElementById('faturaGarantiaDuracao').value = garantia.duracao;
-                }
-                
-                document.getElementById('faturaModalTitle').textContent = 'Editar Fatura';
-                toggleGarantia();
-                new bootstrap.Modal(document.getElementById('faturaModal')).show();
-            }
+            if (!fatura) return;
+            
+            populateForm('fatura', fatura);
+            document.getElementById('faturaComGarantia').checked = fatura.comGarantia || false;
+            
+            const garantia = DataStore.getGarantias().find(g => g.faturaId === id);
+            if (garantia) document.getElementById('faturaGarantiaDuracao').value = garantia.duracao;
+            
+            document.getElementById('faturaModalTitle').textContent = 'Editar Fatura';
+            toggleGarantia();
+            new bootstrap.Modal(document.getElementById('faturaModal')).show();
         }
 
         function verGarantia(faturaId) {
-            const garantias = DataStore.getGarantias();
-            const garantia = garantias.find(g => g.faturaId === faturaId);
-            if (garantia) {
-                const garantiasTab = new bootstrap.Tab(document.getElementById('garantias-tab'));
-                garantiasTab.show();
-                renderGarantias();
-            }
+            if (!DataStore.getGarantias().find(g => g.faturaId === faturaId)) return;
+            new bootstrap.Tab(document.getElementById('garantias-tab')).show();
+            renderGarantias();
         }
 
         function eliminarFatura(id) {
-            if (confirm('Tem a certeza que deseja eliminar esta fatura?')) {
-                DataStore.deleteFatura(id);
-                const garantias = DataStore.getGarantias();
-                const garantiaRelacionada = garantias.find(g => g.faturaId === id);
-                if (garantiaRelacionada && confirm('Deseja também eliminar a garantia associada?')) {
-                    DataStore.deleteGarantia(garantiaRelacionada.id);
-                }
-                renderFaturas();
-                renderGarantias();
-                renderCalendar();
+            if (!confirm('Tem a certeza que deseja eliminar esta fatura?')) return;
+            DataStore.deleteFatura(id);
+            
+            const garantia = DataStore.getGarantias().find(g => g.faturaId === id);
+            if (garantia && confirm('Deseja também eliminar a garantia associada?')) {
+                DataStore.deleteGarantia(garantia.id);
             }
+            renderFaturas();
+            renderGarantias();
+            renderCalendar();
         }
-
+        // OPERAÇÕES DE GARANTIAS
+        
         function editarGarantia(id) {
-            const garantia = DataStore.getGarantias(). find(g => g.id === id);
-            if (garantia) {
-                document.getElementById('garantiaId').value = garantia.id;
-                document.getElementById('garantiaProduto').value = garantia.produto;
-                document.getElementById('garantiaDataCompra').value = garantia.dataCompra;
-                document. getElementById('garantiaDuracao').value = garantia.duracao;
-                document.getElementById('garantiaLocal').value = garantia.local || '';
-                document.getElementById('garantiaValor').value = garantia.valor || '';
-                document.getElementById('garantiaSerial').value = garantia.serial || '';
-                document.getElementById('garantiaNotas').value = garantia.notas || '';
-                document. getElementById('garantiaModalTitle').textContent = 'Editar Garantia';
-                openModal('garantiaModal');
-            }
+            const garantia = DataStore.getGarantias().find(g => g.id === id);
+            if (!garantia) return;
+            populateForm('garantia', garantia);
+            document.getElementById('garantiaModalTitle').textContent = 'Editar Garantia';
+            openModal('garantiaModal');
         }
 
         function eliminarGarantia(id) {
-            if (confirm('Tem a certeza que deseja eliminar esta garantia?')) {
-                DataStore.deleteGarantia(id);
-                renderGarantias();
-                renderDashboard();
-                renderCalendar();
-            }
+            if (!confirm('Tem a certeza que deseja eliminar esta garantia?')) return;
+            DataStore.deleteGarantia(id);
+            renderGarantias();
+            renderDashboard();
+            renderCalendar();
         }
-
+        // OPERAÇÕES DE PESSOAS
+        
         function editarPessoa(id) {
             const pessoa = DataStore.getPessoas().find(p => p.id === id);
-            if (pessoa) {
-                document.getElementById('pessoaId').value = pessoa.id;
-                document.getElementById('pessoaNome').value = pessoa.nome;
-                document.getElementById('pessoaEmail').value = pessoa.email || '';
-                document.getElementById('pessoaTelefone').value = pessoa.telefone || '';
-                document.getElementById('pessoaCor').value = pessoa.cor;
-                document.getElementById('pessoaModalTitle').textContent = 'Editar Pessoa';
-                new bootstrap.Modal(document.getElementById('pessoaModal')).show();
-            }
+            if (!pessoa) return;
+            populateForm('pessoa', pessoa);
+            document.getElementById('pessoaModalTitle').textContent = 'Editar Pessoa';
+            new bootstrap.Modal(document.getElementById('pessoaModal')).show();
         }
 
         function eliminarPessoa(id) {
-            if (confirm('Tem a certeza que deseja eliminar esta pessoa? As contas associadas ficarão sem responsável.')) {
-                DataStore.deletePessoa(id);
-                renderPessoas();
-                updatePessoasSelect();
-                renderDashboard();
-            }
+            if (!confirm('Tem a certeza que deseja eliminar esta pessoa? As contas associadas ficarão sem responsável.')) return;
+            DataStore.deletePessoa(id);
+            renderPessoas();
+            updatePessoasSelect();
+            renderDashboard();
         }
 
         // Helper functions
@@ -1758,9 +1670,19 @@
             return date.toLocaleDateString('pt-PT');
         }
 
-        // Calendário
+        // CALENDÁRIO
+
         let currentCalendarDate = new Date();
         let selectedDate = null;
+
+        // Helper: criar evento do calendário
+        const createCalendarEvent = (text, color, icon, title) => 
+            `<div style="font-size: 10px; background: ${color}; color: ${color === '#ffc107' ? 'black' : 'white'}; padding: 2px 4px; border-radius: 3px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${title}">
+                ${icon} ${text}
+            </div>`;
+
+        // Helper: truncar texto
+        const truncate = (text, max) => text.length > max ? text.substring(0, max) + '...' : text;
 
         function renderCalendar() {
             const year = currentCalendarDate.getFullYear();
@@ -1816,45 +1738,27 @@
                         // Day number
                         let dayHtml = `<div style="font-weight: bold; margin-bottom: 5px; ${isToday ? 'color: #0d6efd;' : isFeriado ? 'color: #dc3545;' : ''}">${date}</div>`;
                         
-                        // Feriado
+                        // Eventos do dia
                         if (isFeriado) {
-                            dayHtml += `<div style="font-size: 10px; background: #dc3545; color: white; padding: 2px 4px; border-radius: 3px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                <i class="bi bi-star-fill"></i> ${isFeriado}
-                            </div>`;
+                            dayHtml += createCalendarEvent(isFeriado, '#dc3545', '<i class="bi bi-star-fill"></i>', isFeriado);
                         }
                         
-                        // Tarefas
-                        const tarefasDoDia = tarefas.filter(t => t.prazo === currentDate && t.status !== 'concluida');
-                        tarefasDoDia.forEach(t => {
+                        tarefas.filter(t => t.prazo === currentDate && t.status !== 'concluida').forEach(t => {
                             const pessoa = pessoas.find(p => p.id === t.responsavel);
                             const prioIcon = t.prioridade === 'alta' ? '🔴' : t.prioridade === 'media' ? '🟡' : '🟢';
-                            dayHtml += `<div style="font-size: 10px; background: #0d6efd; color: white; padding: 2px 4px; border-radius: 3px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${t.titulo} - ${pessoa ? pessoa.nome : ''}">
-                                ${prioIcon} ${t.titulo.substring(0, 15)}${t.titulo.length > 15 ? '...' : ''}
-                            </div>`;
+                            dayHtml += createCalendarEvent(prioIcon + ' ' + truncate(t.titulo, 15), '#0d6efd', '', `${t.titulo} - ${pessoa?.nome || ''}`);
                         });
                         
-                        // Contas
-                        const contasDoDia = contas.filter(c => c.vencimento === currentDate && c.status !== 'paga');
-                        contasDoDia.forEach(c => {
-                            dayHtml += `<div style="font-size: 10px; background: #0dcaf0; color: white; padding: 2px 4px; border-radius: 3px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${c.descricao} - ${c.valor.toFixed(2)}€">
-                                💰 ${c.descricao.substring(0, 15)}${c.descricao.length > 15 ? '...' : ''}
-                            </div>`;
+                        contas.filter(c => c.vencimento === currentDate && c.status !== 'paga').forEach(c => {
+                            dayHtml += createCalendarEvent('💰 ' + truncate(c.descricao, 15), '#0dcaf0', '', `${c.descricao} - ${c.valor.toFixed(2)}€`);
                         });
                         
-                        // Garantias
-                        const garantiasDoDia = garantias.filter(g => g.dataExpiracao === currentDate);
-                        garantiasDoDia.forEach(g => {
-                            dayHtml += `<div style="font-size: 10px; background: #ffc107; color: black; padding: 2px 4px; border-radius: 3px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="Fim garantia: ${g.produto}">
-                                🛡️ ${g.produto.substring(0, 12)}${g.produto.length > 12 ? '...' : ''}
-                            </div>`;
+                        garantias.filter(g => g.dataExpiracao === currentDate).forEach(g => {
+                            dayHtml += createCalendarEvent('🛡️ ' + truncate(g.produto, 12), '#ffc107', '', `Fim garantia: ${g.produto}`);
                         });
                         
-                        // Faturas (data de compra)
-                        const faturasDoDia = faturas.filter(f => f.data === currentDate);
-                        faturasDoDia.forEach(f => {
-                            dayHtml += `<div style="font-size: 10px; background: #198754; color: white; padding: 2px 4px; border-radius: 3px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="Compra: ${f.descricao} - ${f.valor.toFixed(2)}€">
-                                🧾 ${f.descricao.substring(0, 12)}${f.descricao.length > 12 ? '...' : ''}
-                            </div>`;
+                        faturas.filter(f => f.data === currentDate).forEach(f => {
+                            dayHtml += createCalendarEvent('🧾 ' + truncate(f.descricao, 12), '#198754', '', `Compra: ${f.descricao} - ${f.valor.toFixed(2)}€`);
                         });
                         
                         cell.innerHTML = dayHtml;
@@ -2031,21 +1935,17 @@
                 parseInt(todayParts[0]));
         }
 
-        // Event listeners for filters
-        document.getElementById('filtroStatusTarefa').addEventListener('change', renderTarefas);
-        document.getElementById('filtroResponsavelTarefa').addEventListener('change', renderTarefas);
-        document.getElementById('filtroCriadorTarefa').addEventListener('change', renderTarefas);
-        document.getElementById('filtroPrioridadeTarefa').addEventListener('change', renderTarefas);
+        // Event listeners para filtros - método mais eficiente
+        ['filtroStatusTarefa', 'filtroResponsavelTarefa', 'filtroCriadorTarefa', 'filtroPrioridadeTarefa']
+            .forEach(id => document.getElementById(id).addEventListener('change', renderTarefas));
         
-        document.getElementById('filtroStatusConta').addEventListener('change', renderContas);
-        document.getElementById('filtroPessoaConta').addEventListener('change', renderContas);
+        ['filtroStatusConta', 'filtroPessoaConta'].forEach(id => 
+            document.getElementById(id).addEventListener('change', renderContas));
+        
         document.getElementById('filtroStatusGarantia').addEventListener('change', renderGarantias);
 
-        // ==========================================
         // SISTEMA DE PONTOS E RANKING
-        // ==========================================
-
-        // Pontos por ação
+        
         const PONTOS = {
             TAREFA_CONCLUIDA: 10,
             TAREFA_ALTA_PRIORIDADE: 5,
