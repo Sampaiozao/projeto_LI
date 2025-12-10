@@ -34,13 +34,13 @@ function adicionarDadosExemplo() {
     ];
     localStorage.setItem('pessoas', JSON.stringify(pessoas));
     
-    // Contas - datas atualizadas para dezembro 2025
+    // Contas - datas atualizadas para apresentação dia 18 dezembro 2025
     const contas = [
         {
             id: 'c1',
             descricao: 'Conta de Água',
             valor: 38.75,
-            vencimento: '2025-12-10',
+            vencimento: '2025-12-20',
             responsavel: 'p1',
             categoria: 'agua',
             recorrente: 'mensal',
@@ -52,7 +52,7 @@ function adicionarDadosExemplo() {
             id: 'c2',
             descricao: 'Conta de Eletricidade',
             valor: 67.40,
-            vencimento: '2025-12-15',
+            vencimento: '2025-12-22',
             responsavel: 'p2',
             categoria: 'luz',
             recorrente: 'mensal',
@@ -64,7 +64,7 @@ function adicionarDadosExemplo() {
             id: 'c3',
             descricao: 'Internet Fibra',
             valor: 44.99,
-            vencimento: '2025-12-08',
+            vencimento: '2025-12-19',
             responsavel: 'p3',
             categoria: 'internet',
             recorrente: 'mensal',
@@ -76,7 +76,7 @@ function adicionarDadosExemplo() {
             id: 'c4',
             descricao: 'Gás Natural',
             valor: 29.50,
-            vencimento: '2025-12-20',
+            vencimento: '2025-12-28',
             responsavel: 'p1',
             categoria: 'gas',
             recorrente: 'mensal',
@@ -93,7 +93,7 @@ function adicionarDadosExemplo() {
             id: 'f1',
             descricao: 'Aspirador Robot Xiaomi',
             valor: 299.99,
-            data: '2025-11-25',
+            data: '2025-12-10',
             local: 'Worten',
             categoria: 'eletrodomesticos',
             numero: 'FT 2025/45678',
@@ -106,7 +106,7 @@ function adicionarDadosExemplo() {
             id: 'f2',
             descricao: 'iPhone 15 Pro',
             valor: 1299.00,
-            data: '2025-11-20',
+            data: '2025-12-05',
             local: 'Apple Store',
             categoria: 'eletronicos',
             numero: 'FT 2025/99001',
@@ -119,7 +119,7 @@ function adicionarDadosExemplo() {
             id: 'f3',
             descricao: 'Compras Natal - Supermercado',
             valor: 187.35,
-            data: '2025-12-01',
+            data: '2025-12-15',
             local: 'Pingo Doce',
             categoria: 'alimentacao',
             numero: 'FT 2025/88542',
@@ -137,9 +137,9 @@ function adicionarDadosExemplo() {
             id: 'gar_f1',
             faturaId: 'f1',
             produto: 'Aspirador Robot Xiaomi',
-            dataCompra: '2025-11-25',
+            dataCompra: '2025-12-10',
             duracao: 24,
-            dataExpiracao: '2027-11-25',
+            dataExpiracao: '2027-12-10',
             local: 'Worten',
             valor: 299.99,
             serial: 'XM2025ROBOT001',
@@ -150,9 +150,9 @@ function adicionarDadosExemplo() {
             id: 'gar_f2',
             faturaId: 'f2',
             produto: 'iPhone 15 Pro',
-            dataCompra: '2025-11-20',
+            dataCompra: '2025-12-05',
             duracao: 24,
-            dataExpiracao: '2027-11-20',
+            dataExpiracao: '2027-12-05',
             local: 'Apple Store',
             valor: 1299.00,
             serial: 'DMPXK2ABCD1234',
@@ -174,7 +174,7 @@ function adicionarDadosExemplo() {
     ];
     localStorage.setItem('garantias', JSON.stringify(garantias));
     
-    // Tarefas - tarefas atuais
+    // Tarefas - tarefas atuais para apresentação dia 18
     const tarefas = [
         {
             id: 't1',
@@ -183,7 +183,7 @@ function adicionarDadosExemplo() {
             responsavel: 'p2',
             criador: 'p1',
             criadorNome: 'João Silva',
-            prazo: '2025-12-08',
+            prazo: '2025-12-18',
             prioridade: 'alta',
             status: 'pendente',
             contaId: null,
@@ -196,7 +196,7 @@ function adicionarDadosExemplo() {
             responsavel: 'p3',
             criador: 'p2',
             criadorNome: 'Maria Santos',
-            prazo: '2025-12-08',
+            prazo: '2025-12-19',
             prioridade: 'alta',
             status: 'pendente',
             contaId: 'c3',
@@ -209,7 +209,7 @@ function adicionarDadosExemplo() {
             responsavel: 'p1',
             criador: 'p2',
             criadorNome: 'Maria Santos',
-            prazo: '2025-12-20',
+            prazo: '2025-12-22',
             prioridade: 'media',
             status: 'em_progresso',
             contaId: null,
@@ -235,7 +235,7 @@ function adicionarDadosExemplo() {
             responsavel: 'p2',
             criador: 'p2',
             criadorNome: 'Maria Santos',
-            prazo: '2025-12-15',
+            prazo: '2025-12-20',
             prioridade: 'baixa',
             status: 'pendente',
             contaId: null,
@@ -261,7 +261,7 @@ function adicionarDadosExemplo() {
             pontos: 15,
             tipo: 'conta',
             descricao: 'Pagou conta no prazo: Conta de Luz',
-            data: '2025-12-01T10:30:00.000Z'
+            data: '2025-12-15T10:30:00.000Z'
         },
         {
             id: '2',
@@ -270,7 +270,7 @@ function adicionarDadosExemplo() {
             pontos: 15,
             tipo: 'tarefa',
             descricao: 'Concluiu tarefa: Fazer compras (alta prioridade)',
-            data: '2025-12-02T14:20:00.000Z'
+            data: '2025-12-16T14:20:00.000Z'
         },
         {
             id: '3',
@@ -279,7 +279,7 @@ function adicionarDadosExemplo() {
             pontos: 10,
             tipo: 'tarefa',
             descricao: 'Concluiu tarefa: Organizar documentos',
-            data: '2025-12-03T09:15:00.000Z'
+            data: '2025-12-17T09:15:00.000Z'
         },
         {
             id: '4',
@@ -288,7 +288,7 @@ function adicionarDadosExemplo() {
             pontos: 10,
             tipo: 'tarefa',
             descricao: 'Concluiu tarefa: Levar carro à revisão',
-            data: '2025-12-03T16:45:00.000Z'
+            data: '2025-12-17T16:45:00.000Z'
         }
     ];
     localStorage.setItem('historicoPontos', JSON.stringify(historicoPontos));
