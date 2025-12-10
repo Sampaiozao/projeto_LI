@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestão de Casa - Dashboard</title>
+    <title>Gestor de Casa - Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
     <!-- Header -->
     <nav class="navbar navbar-expand-lg shadow-sm mb-4">
         <div class="container-fluid px-4">
-            <span class="navbar-brand mb-0 h1">🏠 Gestão de Casa</span>
+            <span class="navbar-brand mb-0 h1">🏠 Gestor de Casa</span>
             <div class="d-flex align-items-center">
                 <span id="userName" class="me-3 text-muted"></span>
                 <button class="btn btn-outline-danger btn-sm" onclick="logout()">
@@ -804,16 +804,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="app.js"></script>
     <script>
-        // ==========================================
         // AUTENTICAÇÃO E INICIALIZAÇÃO
-        // ==========================================
-        
         // Verificar se usuário está autenticado
         if (!Auth.isLoggedIn()) window.location.href = 'index.html';
 
-        // ==========================================
         // CONFIGURAÇÃO DE MODAIS
-        // ==========================================
         const modalResetConfig = {
             faturaModal: { form: 'faturaForm', id: 'faturaId', title: 'Nova Fatura', extra: () => document.getElementById('garantiaSection').style.display = 'none' },
             garantiaModal: { form: 'garantiaForm', id: 'garantiaId', title: 'Nova Garantia' },
@@ -861,9 +856,7 @@
             });
         }
 
-        // ==========================================
         // SUBMISSÕES DE FORMULÁRIOS
-        // ==========================================
         
         // Helper para obter valor de campo
         const getFieldValue = (id, parser = val => val) => {
@@ -1147,9 +1140,7 @@
         }
 
         // Concluir Tarefa
-        // ==========================================
         // OPERAÇÕES DE TAREFAS
-        // ==========================================
         
         function concluirTarefa(id) {
             const tarefa = DataStore.getTarefas().find(t => t.id === id);
@@ -1197,9 +1188,7 @@
 
 
 
-        // ==========================================
         // FUNÇÕES DE RENDERIZAÇÃO
-        // ==========================================
         
         // Helper para criar botões de ação
         const createActionButtons = (actions) => {
@@ -1423,10 +1412,12 @@
                             ${pessoa ? `<span class="badge" style="background:${pessoa.cor}">${pessoa.nome}</span>` : '-'}
                         </td>
                         <td><span class="status ${statusClass}">${statusText}</span></td>
-                        <td class="actions">
-                            ${c.status !== 'paga' ? `<button class="btn-icon" onclick="marcarPaga('${c.id}')" title="Marcar como paga">✓</button>` : ''}
-                            <button class="btn-icon" onclick="editarConta('${c.id}')" title="Editar">✏️</button>
-                            <button class="btn-icon danger" onclick="eliminarConta('${c.id}')" title="Eliminar">🗑️</button>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                ${c.status !== 'paga' ? `<button class="btn btn-success btn-sm" onclick="marcarPaga('${c.id}')" title="Marcar como paga"><i class="bi bi-check-lg"></i></button>` : ''}
+                                <button class="btn btn-primary btn-sm" onclick="editarConta('${c.id}')" title="Editar"><i class="bi bi-pencil"></i></button>
+                                <button class="btn btn-danger btn-sm" onclick="eliminarConta('${c.id}')" title="Eliminar"><i class="bi bi-trash"></i></button>
+                            </div>
                         </td>
                     </tr>`;
                 }).join('')
@@ -1531,8 +1522,10 @@
                             <p class="pessoa-stats">${contasPessoa. length} contas pendentes (${total.toFixed(2)}€)</p>
                         </div>
                         <div class="pessoa-actions">
-                            <button class="btn-icon" onclick="editarPessoa('${p.id}')">✏️</button>
-                            <button class="btn-icon danger" onclick="eliminarPessoa('${p.id}')">🗑️</button>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-primary btn-sm" onclick="editarPessoa('${p.id}')" title="Editar"><i class="bi bi-pencil"></i></button>
+                                <button class="btn btn-danger btn-sm" onclick="eliminarPessoa('${p.id}')" title="Eliminar"><i class="bi bi-trash"></i></button>
+                            </div>
                         </div>
                     </div>`;
                 }).join('')
@@ -2034,8 +2027,7 @@
             if (ranking.length === 0) {
                 podioContainer.innerHTML = '<p class="text-muted">Adicione pessoas para ver o ranking</p>';
             } else {
-                let podioHtml = '';
-                // Ordem visual: 2º lugar | 1º lugar | 3º lugar (centro mais alto)
+                let podioHtml = '';   
                 const posicoes = [
                     { pos: 0, col: 'col-md-3', order: 2, height: '180px', bg: 'linear-gradient(135deg, #ffd700 0%, #ffb800 100%)', medalha: '🥇' },
                     { pos: 1, col: 'col-md-3', order: 1, height: '140px', bg: 'linear-gradient(135deg, #c0c0c0 0%, #a8a8a8 100%)', medalha: '🥈' },

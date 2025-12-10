@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestão de Casa - Entrar</title>
+    <title>Gestor de Casa - Entrar</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -18,12 +18,14 @@
             display: flex;
             align-items: center;
             position: relative;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding: 20px 0;
         }
         
         body::before {
             content: '';
-            position: absolute;
+            position: fixed;
             top: -50%;
             left: -50%;
             width: 200%;
@@ -32,6 +34,7 @@
                         radial-gradient(circle at 80% 20%, rgba(255, 107, 107, 0.1) 0%, transparent 40%),
                         radial-gradient(circle at 20% 80%, rgba(78, 205, 196, 0.1) 0%, transparent 40%);
             animation: float 20s ease-in-out infinite;
+            z-index: -1;
         }
         
         @keyframes float {
@@ -250,7 +253,7 @@
                         <!-- Cabeçalho -->
                         <div class="text-center mb-4">
                             <div class="brand-icon">🏠</div>
-                            <h1 class="brand-title">Gestão de Casa</h1>
+                            <h1 class="brand-title">Gestor de Casa</h1>
                             <p class="brand-subtitle">Organize as suas contas, faturas e garantias</p>
                         </div>
                         
@@ -379,6 +382,10 @@
                                 <span>Gestão de faturas e garantias</span>
                             </div>
                             <div class="feature-item">
+                                <i class="bi bi-list-task"></i>
+                                <span>Gestão de tarefas domésticas</span>
+                            </div>
+                            <div class="feature-item">
                                 <i class="bi bi-calendar-check"></i>
                                 <span>Calendário com lembretes</span>
                             </div>
@@ -386,13 +393,17 @@
                                 <i class="bi bi-people"></i>
                                 <span>Partilha com a família</span>
                             </div>
+                            <div class="feature-item">
+                                <i class="bi bi-trophy"></i>
+                                <span>Sistema de pontos e ranking</span>
+                            </div>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Rodapé -->
                 <p class="text-center footer-text mt-4 small">
-                    © 2025 Gestão de Casa • Feito com ❤️ em Portugal 🇵🇹
+                    © 2025 Gestor de Casa | ESTGA - Universidade de Aveiro 
                 </p>
             </div>
         </div>
@@ -464,10 +475,11 @@
                     errorDiv.querySelector('span').textContent = result.message;
                     errorDiv.classList.remove('d-none');
                     document.getElementById('registerSuccess').classList.add('d-none');
+                    registerForm.classList.add('was-validated');
                 }
+            } else {
+                registerForm.classList.add('was-validated');
             }
-            
-            registerForm.classList.add('was-validated');
         });
 
         // Limpar validação ao mudar de separador
