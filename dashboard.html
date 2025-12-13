@@ -1007,7 +1007,7 @@
         document.getElementById('tarefaForm').addEventListener('submit', (e) => {
             e.preventDefault();
             DataStore.saveTarefa({
-                id: getFieldValue('tarefaId') || Date.now().toString(),
+                id: getFieldValue('tarefaId') || (Date.now().toString() + '-' + Math.random().toString(16).slice(2)),
                 titulo: getFieldValue('tarefaTitulo'),
                 descricao: getFieldValue('tarefaDescricao'),
                 responsavel: getFieldValue('tarefaResponsavel'),

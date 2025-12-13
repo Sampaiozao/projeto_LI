@@ -168,37 +168,6 @@ const DataStore = {
     }
 };
 
-// Utility Functions
-function formatCurrency(value) {
-    return `${value.toFixed(2)}€`;
-}
-
-function formatDate(dateStr) {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('pt-PT');
-}
-
-function getDaysRemaining(dateStr) {
-    const date = new Date(dateStr);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    date.setHours(0, 0, 0, 0);
-    
-    const diff = Math.ceil((date - today) / (1000 * 60 * 60 * 24));
-    return diff;
-}
-
-function getStatusClass(dias) {
-    if (dias < 0) return 'danger';
-    if (dias <= 7) return 'warning';
-    return 'success';
-}
-
-function getRandomColor() {
-    const colors = ['#00d4aa', '#10b981', '#06b6d4', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6'];
-    return colors[Math.floor(Math.random() * colors.length)];
-}
-
 // Feriados de Portugal
 function getFeriadosPortugal(year) {
     // Calcular Páscoa (algoritmo de Meeus)
