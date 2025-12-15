@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestor de Casa - Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
@@ -16,7 +16,7 @@
             <span class="navbar-brand mb-0 h1">🏠 Gestor de Casa</span>
             <div class="d-flex align-items-center">
                 <span id="userName" class="me-3 text-muted"></span>
-                <button class="btn btn-outline-danger btn-sm" onclick="logout()">
+                <button class="btn btn-outline-light btn-sm" onclick="logout()">
                     <i class="bi bi-box-arrow-right"></i> Sair
                 </button>
             </div>
@@ -483,59 +483,66 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="contaModalTitle">Nova Conta</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <form id="contaForm">
-                <input type="hidden" id="contaId">
-                <div class="form-group">
-                    <label>Descrição</label>
-                    <input type="text" id="contaDescricao" required placeholder="Ex: Eletricidade, Água, Internet... ">
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Valor (€)</label>
-                        <input type="number" id="contaValor" step="0.01" required placeholder="0.00">
-                    </div>
-                    <div class="form-group">
-                        <label>Data de Vencimento</label>
-                        <input type="date" id="contaVencimento" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Responsável</label>
-                    <select id="contaResponsavel" required>
-                        <option value="">Selecione... </option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Categoria</label>
-                    <select id="contaCategoria">
-                        <option value="utilidades">Utilidades (Água, Luz, Gás)</option>
-                        <option value="internet">Internet/TV</option>
-                        <option value="renda">Renda/Hipoteca</option>
-                        <option value="seguros">Seguros</option>
-                        <option value="outros">Outros</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Recorrente? </label>
-                    <select id="contaRecorrente">
-                        <option value="nao">Não</option>
-                        <option value="mensal">Mensal</option>
-                        <option value="trimestral">Trimestral</option>
-                        <option value="anual">Anual</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Notas</label>
-                    <textarea id="contaNotas" placeholder="Observações adicionais... "></textarea>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
-                </div>
-            </form>
+                        <input type="hidden" id="contaId">
+
+                        <div class="mb-3">
+                            <label for="contaDescricao" class="form-label">Descrição</label>
+                            <input type="text" class="form-control" id="contaDescricao" required placeholder="Ex: Eletricidade, Água, Internet... ">
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="contaValor" class="form-label">Valor (€)</label>
+                                <input type="number" class="form-control" id="contaValor" step="0.01" required placeholder="0.00">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="contaVencimento" class="form-label">Data de Vencimento</label>
+                                <input type="date" class="form-control" id="contaVencimento" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="contaResponsavel" class="form-label">Responsável</label>
+                            <select class="form-select" id="contaResponsavel" required>
+                                <option value="">Selecione... </option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="contaCategoria" class="form-label">Categoria</label>
+                            <select class="form-select" id="contaCategoria">
+                                <option value="utilidades">Utilidades (Água, Luz, Gás)</option>
+                                <option value="internet">Internet/TV</option>
+                                <option value="renda">Renda/Hipoteca</option>
+                                <option value="seguros">Seguros</option>
+                                <option value="outros">Outros</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="contaRecorrente" class="form-label">Recorrente?</label>
+                            <select class="form-select" id="contaRecorrente">
+                                <option value="nao">Não</option>
+                                <option value="mensal">Mensal</option>
+                                <option value="trimestral">Trimestral</option>
+                                <option value="anual">Anual</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="contaNotas" class="form-label">Notas</label>
+                            <textarea class="form-control" id="contaNotas" rows="3" placeholder="Observações adicionais... "></textarea>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 mt-3">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -547,45 +554,51 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="faturaModalTitle">Nova Fatura</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <form id="faturaForm">
-                <input type="hidden" id="faturaId">
-                <div class="form-group">
-                    <label>Descrição do Produto/Serviço</label>
-                    <input type="text" id="faturaDescricao" required placeholder="Ex: Televisão Samsung 55''">
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Valor (€)</label>
-                        <input type="number" id="faturaValor" step="0.01" required placeholder="0.00">
-                    </div>
-                    <div class="form-group">
-                        <label>Data da Compra</label>
-                        <input type="date" id="faturaData" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Local de Compra</label>
-                    <input type="text" id="faturaLocal" placeholder="Ex: Worten, Amazon, IKEA...">
-                </div>
-                <div class="form-group">
-                    <label>Categoria</label>
-                    <select id="faturaCategoria" onchange="toggleGarantia()">
-                        <option value="eletronicos">Eletrónicos</option>
-                        <option value="eletrodomesticos">Eletrodomésticos</option>
-                        <option value="mobiliario">Mobiliário</option>
-                        <option value="roupa">Roupa</option>
-                        <option value="alimentacao">Alimentação</option>
-                        <option value="outros">Outros</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Número da Fatura (opcional)</label>
-                    <input type="text" id="faturaNumero" placeholder="Ex: FT 2024/12345">
-                </div>
-                <div class="form-group" id="garantiaSection">
+                        <input type="hidden" id="faturaId">
+
+                        <div class="mb-3">
+                            <label for="faturaDescricao" class="form-label">Descrição do Produto/Serviço</label>
+                            <input type="text" class="form-control" id="faturaDescricao" required placeholder="Ex: Televisão Samsung 55''">
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="faturaValor" class="form-label">Valor (€)</label>
+                                <input type="number" class="form-control" id="faturaValor" step="0.01" required placeholder="0.00">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="faturaData" class="form-label">Data da Compra</label>
+                                <input type="date" class="form-control" id="faturaData" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="faturaLocal" class="form-label">Local de Compra</label>
+                            <input type="text" class="form-control" id="faturaLocal" placeholder="Ex: Worten, Amazon, IKEA...">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="faturaCategoria" class="form-label">Categoria</label>
+                            <select class="form-select" id="faturaCategoria" onchange="toggleGarantia()">
+                                <option value="eletronicos">Eletrónicos</option>
+                                <option value="eletrodomesticos">Eletrodomésticos</option>
+                                <option value="mobiliario">Mobiliário</option>
+                                <option value="roupa">Roupa</option>
+                                <option value="alimentacao">Alimentação</option>
+                                <option value="outros">Outros</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="faturaNumero" class="form-label">Número da Fatura (opcional)</label>
+                            <input type="text" class="form-control" id="faturaNumero" placeholder="Ex: FT 2024/12345">
+                        </div>
+
+                        <div class="mb-3" id="garantiaSection">
                     <div class="form-check mb-2">
                         <input class="form-check-input" type="checkbox" id="faturaComGarantia" checked>
                         <label class="form-check-label" for="faturaComGarantia">
@@ -593,7 +606,7 @@
                         </label>
                     </div>
                     <div id="garantiaDuracaoSection">
-                        <label>Duração da Garantia</label>
+                        <label for="faturaGarantiaDuracao" class="form-label">Duração da Garantia</label>
                         <select id="faturaGarantiaDuracao" class="form-select">
                             <option value="6">6 Meses</option>
                             <option value="12">1 Ano</option>
@@ -603,19 +616,21 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label>Número de Série (opcional)</label>
-                    <input type="text" id="faturaSerial" placeholder="S/N do produto">
-                </div>
-                <div class="form-group">
-                    <label>Notas</label>
-                    <textarea id="faturaNotas" placeholder="Observações adicionais..."></textarea>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
-                </div>
-            </form>
+                        <div class="mb-3">
+                            <label for="faturaSerial" class="form-label">Número de Série (opcional)</label>
+                            <input type="text" class="form-control" id="faturaSerial" placeholder="S/N do produto">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="faturaNotas" class="form-label">Notas</label>
+                            <textarea class="form-control" id="faturaNotas" rows="3" placeholder="Observações adicionais..."></textarea>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 mt-3">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -627,51 +642,58 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="garantiaModalTitle">Nova Garantia</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <form id="garantiaForm">
-                <input type="hidden" id="garantiaId">
-                <div class="form-group">
-                    <label>Produto</label>
-                    <input type="text" id="garantiaProduto" required placeholder="Ex: Máquina de Lavar Roupa">
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Data da Compra</label>
-                        <input type="date" id="garantiaDataCompra" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Duração da Garantia</label>
-                        <select id="garantiaDuracao" required>
-                            <option value="6">6 Meses</option>
-                            <option value="12">1 Ano</option>
-                            <option value="24" selected>2 Anos</option>
-                            <option value="36">3 Anos</option>
-                            <option value="60">5 Anos</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Local de Compra</label>
-                    <input type="text" id="garantiaLocal" placeholder="Ex: MediaMarkt, Worten... ">
-                </div>
-                <div class="form-group">
-                    <label>Valor do Produto (€)</label>
-                    <input type="number" id="garantiaValor" step="0.01" placeholder="0.00">
-                </div>
-                <div class="form-group">
-                    <label>Número de Série (opcional)</label>
-                    <input type="text" id="garantiaSerial" placeholder="S/N do produto">
-                </div>
-                <div class="form-group">
-                    <label>Notas</label>
-                    <textarea id="garantiaNotas" placeholder="Observações, contactos de suporte..."></textarea>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
-                </div>
+                        <input type="hidden" id="garantiaId">
+
+                        <div class="mb-3">
+                            <label for="garantiaProduto" class="form-label">Produto</label>
+                            <input type="text" class="form-control" id="garantiaProduto" required placeholder="Ex: Máquina de Lavar Roupa">
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="garantiaDataCompra" class="form-label">Data da Compra</label>
+                                <input type="date" class="form-control" id="garantiaDataCompra" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="garantiaDuracao" class="form-label">Duração da Garantia</label>
+                                <select class="form-select" id="garantiaDuracao" required>
+                                    <option value="6">6 Meses</option>
+                                    <option value="12">1 Ano</option>
+                                    <option value="24" selected>2 Anos</option>
+                                    <option value="36">3 Anos</option>
+                                    <option value="60">5 Anos</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="garantiaLocal" class="form-label">Local de Compra</label>
+                            <input type="text" class="form-control" id="garantiaLocal" placeholder="Ex: MediaMarkt, Worten... ">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="garantiaValor" class="form-label">Valor do Produto (€)</label>
+                            <input type="number" class="form-control" id="garantiaValor" step="0.01" placeholder="0.00">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="garantiaSerial" class="form-label">Número de Série (opcional)</label>
+                            <input type="text" class="form-control" id="garantiaSerial" placeholder="S/N do produto">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="garantiaNotas" class="form-label">Notas</label>
+                            <textarea class="form-control" id="garantiaNotas" rows="3" placeholder="Observações, contactos de suporte..."></textarea>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 mt-3">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -684,7 +706,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="tarefaModalTitle">Nova Tarefa</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <form id="tarefaForm">
@@ -770,7 +792,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="pessoaModalTitle">Nova Pessoa</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <form id="pessoaForm">
@@ -1495,9 +1517,13 @@
                                 ${g. diasRestantes > 0 ? `${g.diasRestantes} dias restantes` : 'Garantia expirada'}
                             </p>
                         </div>
-                        <div class="garantia-actions">
-                            <button class="btn-icon" onclick="editarGarantia('${g.id}')">✏️</button>
-                            <button class="btn-icon danger" onclick="eliminarGarantia('${g.id}')">🗑️</button>
+                        <div class="d-flex justify-content-end gap-2 mt-3">
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="editarGarantia('${g.id}')" title="Editar">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="eliminarGarantia('${g.id}')" title="Eliminar">
+                                <i class="bi bi-trash"></i>
+                            </button>
                         </div>
                     </div>`;
                 }).join('')
@@ -2116,7 +2142,6 @@
                 }).join('');
             }
         }
-
         // Initial render
         updatePessoasSelect();
         updateTarefasPessoasSelects();
