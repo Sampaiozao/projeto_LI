@@ -507,7 +507,7 @@ function carregarDadosExemplo() {
     ];
     localStorage.setItem('historicoPontos', JSON.stringify(historicoPontos));
     
-    console.log('✅ Dados de exemplo carregados automaticamente!');
+    console.log(' Dados de exemplo carregados automaticamente!');
 }
 
 // Carregar dados automaticamente quando a aplicação iniciar
