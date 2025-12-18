@@ -863,6 +863,21 @@
             window.location.href = 'index.html';
         }
 
+        // Helpers para abrir/fechar modais (Bootstrap)
+        function openModal(modalId) {
+            const el = document.getElementById(modalId);
+            if (!el) return;
+            const instance = bootstrap.Modal.getInstance(el) || new bootstrap.Modal(el);
+            instance.show();
+        }
+
+        function closeModal(modalId) {
+            const el = document.getElementById(modalId);
+            if (!el) return;
+            const instance = bootstrap.Modal.getInstance(el) || new bootstrap.Modal(el);
+            instance.hide();
+        }
+
         // Update pessoas dropdown
         function updatePessoasSelect() {
             const pessoas = DataStore.getPessoas();
@@ -873,7 +888,7 @@
             filterSelect.innerHTML = '<option value="todas">Todas as Pessoas</option>';
             
             pessoas.forEach(p => {
-                select.innerHTML += `<option value="${p. id}">${p. nome}</option>`;
+                select.innerHTML += `<option value="${p.id}">${p.nome}</option>`;
                 filterSelect.innerHTML += `<option value="${p.id}">${p.nome}</option>`;
             });
         }
@@ -1228,14 +1243,14 @@
             hoje.setHours(0, 0, 0, 0);
 
             // Stats
-            const pendentes = contas. filter(c => c.status === 'pendente');
+            const pendentes = contas.filter(c => c.status === 'pendente');
             const aVencer = pendentes.filter(c => {
                 const venc = new Date(c.vencimento);
                 const diff = (venc - hoje) / (1000 * 60 * 60 * 24);
                 return diff >= 0 && diff <= 7;
             });
             const atrasadas = pendentes.filter(c => new Date(c.vencimento) < hoje);
-            const total = pendentes.reduce((sum, c) => sum + c. valor, 0);
+            const total = pendentes.reduce((sum, c) => sum + c.valor, 0);
 
             document.getElementById('totalContas').textContent = pendentes.length;
             document.getElementById('totalValor').textContent = `${total.toFixed(2)}€`;
@@ -1317,7 +1332,7 @@
                     const diff = (exp - hoje) / (1000 * 60 * 60 * 24);
                     return diff >= 0 && diff <= 60;
                 })
-                .sort((a, b) => new Date(a.dataExpiracao) - new Date(b. dataExpiracao))
+                .sort((a, b) => new Date(a.dataExpiracao) - new Date(b.dataExpiracao))
                 .slice(0, 5);
 
             const garantiasHtml = garantiasExpirando.length > 0
@@ -1398,7 +1413,7 @@
         function renderContas() {
             const contas = DataStore.getContas();
             const pessoas = DataStore.getPessoas();
-            const filtroStatus = document.getElementById('filtroStatusConta'). value;
+            const filtroStatus = document.getElementById('filtroStatusConta').value;
             const filtroPessoa = document.getElementById('filtroPessoaConta').value;
             const hoje = new Date();
             hoje.setHours(0, 0, 0, 0);
@@ -1425,7 +1440,7 @@
                 ? filtered.map(c => {
                     const pessoa = pessoas.find(p => p.id === c.responsavel);
                     const statusClass = c.status === 'paga' ? 'success' : c.status === 'atrasada' ?  'danger' : 'warning';
-                    const statusText = c.status === 'paga' ? 'Paga' : c. status === 'atrasada' ? 'Atrasada' : 'Pendente';
+                    const statusText = c.status === 'paga' ? 'Paga' : c.status === 'atrasada' ? 'Atrasada' : 'Pendente';
                     return `<tr>
                         <td>${c.descricao}</td>
                         <td>${c.valor.toFixed(2)}€</td>
@@ -1448,14 +1463,13 @@
 
         function renderFaturas() {
             const faturas = DataStore.getFaturas();
-            const tbody = document. getElementById('faturasTableBody');
+            const tbody = document.getElementById('faturasTableBody');
             
             tbody.innerHTML = faturas.length > 0
                 ? faturas.map(f => {
                     const garantias = DataStore.getGarantias();
                     const temGarantia = garantias.some(g => g.faturaId === f.id);
                     const actions = [
-                        ...(temGarantia ? [{ variant: 'success', onclick: `verGarantia('${f.id}')`, title: 'Ver Garantia', icon: 'shield-check' }] : []),
                         { variant: 'primary', onclick: `editarFatura('${f.id}')`, title: 'Editar', icon: 'pencil' },
                         { variant: 'danger', onclick: `eliminarFatura('${f.id}')`, title: 'Eliminar', icon: 'trash' }
                     ];
@@ -1476,11 +1490,11 @@
 
         function renderGarantias() {
             const garantias = DataStore.getGarantias();
-            const filtro = document.getElementById('filtroStatusGarantia'). value;
+            const filtro = document.getElementById('filtroStatusGarantia').value;
             const hoje = new Date();
             hoje.setHours(0, 0, 0, 0);
 
-            let filtered = garantias. map(g => {
+            let filtered = garantias.map(g => {
                 const exp = new Date(g.dataExpiracao);
                 const diff = Math.ceil((exp - hoje) / (1000 * 60 * 60 * 24));
                 return { ...g, diasRestantes: diff };
@@ -1489,16 +1503,16 @@
             if (filtro === 'ativa') {
                 filtered = filtered.filter(g => g.diasRestantes > 0);
             } else if (filtro === 'expirada') {
-                filtered = filtered. filter(g => g.diasRestantes <= 0);
+                filtered = filtered.filter(g => g.diasRestantes <= 0);
             } else if (filtro === 'expirando') {
-                filtered = filtered. filter(g => g.diasRestantes > 0 && g.diasRestantes <= 30);
+                filtered = filtered.filter(g => g.diasRestantes > 0 && g.diasRestantes <= 30);
             }
 
             const grid = document.getElementById('garantiasGrid');
             grid.innerHTML = filtered.length > 0
                 ? filtered.map(g => {
                     const statusClass = g.diasRestantes <= 0 ? 'expired' : g.diasRestantes <= 30 ? 'warning' : 'active';
-                    const statusText = g. diasRestantes <= 0 ? 'Expirada' : g.diasRestantes <= 30 ? 'A Expirar' : 'Ativa';
+                    const statusText = g.diasRestantes <= 0 ? 'Expirada' : g.diasRestantes <= 30 ? 'A Expirar' : 'Ativa';
                     return `<div class="garantia-card ${statusClass}">
                         <div class="garantia-header">
                             <h4>
@@ -1514,7 +1528,7 @@
                             ${g.valor ?  `<p><strong>Valor:</strong> ${g.valor.toFixed(2)}€</p>` : ''}
                             ${g.serial ? `<p><strong>S/N:</strong> ${g.serial}</p>` : ''}
                             <p class="dias-restantes">
-                                ${g. diasRestantes > 0 ? `${g.diasRestantes} dias restantes` : 'Garantia expirada'}
+                                ${g.diasRestantes > 0 ? `${g.diasRestantes} dias restantes` : 'Garantia expirada'}
                             </p>
                         </div>
                         <div class="d-flex justify-content-end gap-2 mt-3">
@@ -1532,20 +1546,20 @@
 
         function renderPessoas() {
             const pessoas = DataStore.getPessoas();
-            const contas = DataStore. getContas();
+            const contas = DataStore.getContas();
 
             const grid = document.getElementById('pessoasGrid');
             grid.innerHTML = pessoas.length > 0
                 ?  pessoas.map(p => {
-                    const contasPessoa = contas. filter(c => c. responsavel === p. id && c.status !== 'paga');
+                    const contasPessoa = contas.filter(c => c.responsavel === p.id && c.status !== 'paga');
                     const total = contasPessoa.reduce((sum, c) => sum + c.valor, 0);
                     return `<div class="pessoa-card">
-                        <div class="pessoa-avatar" style="background:${p.cor}">${p.nome. charAt(0).toUpperCase()}</div>
+                        <div class="pessoa-avatar" style="background:${p.cor}">${p.nome.charAt(0).toUpperCase()}</div>
                         <div class="pessoa-info">
                             <h4>${p.nome}</h4>
-                            ${p.email ? `<p>📧 ${p. email}</p>` : ''}
+                            ${p.email ? `<p>📧 ${p.email}</p>` : ''}
                             ${p.telefone ? `<p>📱 ${p.telefone}</p>` : ''}
-                            <p class="pessoa-stats">${contasPessoa. length} contas pendentes (${total.toFixed(2)}€)</p>
+                            <p class="pessoa-stats">${contasPessoa.length} contas pendentes (${total.toFixed(2)}€)</p>
                         </div>
                         <div class="pessoa-actions">
                             <div class="btn-group btn-group-sm">
